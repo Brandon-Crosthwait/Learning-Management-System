@@ -28,6 +28,9 @@ namespace LMS.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        /// <summary>
+        /// For password security
+        /// </summary>
         public string Salt { get; set; }
 
         [DataType(DataType.Date)]

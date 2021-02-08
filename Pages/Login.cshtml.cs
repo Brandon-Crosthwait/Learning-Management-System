@@ -29,13 +29,15 @@ namespace LMS.Pages
 
         public IActionResult OnPost()
         {
+            // Grab the user from database using email(username)
             var userRecord = _context.User.Where(u => u.Email == Username).FirstOrDefault();
 
             if (userRecord != null)
             {
+                // Grab user's salt and store in byte array
                 byte[] salt = Convert.FromBase64String(userRecord.Salt);
-                    //Encoding.ASCII.GetBytes(userRecord.Salt);
 
+                // Hash the user entered passsword
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: Password,
                     salt: salt,
@@ -43,11 +45,12 @@ namespace LMS.Pages
                     iterationCount: 10000,
                     numBytesRequested: 256 / 8));
 
+                // Check if hashed user entered password matches the user account password
                 if (userRecord.Password == hashed)
                 {
                     HttpContext.Session.SetString("userFirstName", userRecord.FirstName);
 
-                    return RedirectToPage("Index");
+                    return RedirectToPage("UserHome");
                 }
                 else
                 {

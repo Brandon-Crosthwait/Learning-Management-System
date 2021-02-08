@@ -17,8 +17,8 @@ namespace LMS.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Professor = table.Column<bool>(type: "bit", nullable: false)
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsInstructor = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

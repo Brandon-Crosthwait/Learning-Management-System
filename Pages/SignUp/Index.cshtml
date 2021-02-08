@@ -22,14 +22,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.User[0].Email)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.User[0].Password)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.User[0].DateOfBirth)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User[0].BirthDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Professor)
+                @Html.DisplayNameFor(model => model.User[0].IsInstructor)
             </th>
             <th></th>
         </tr>
@@ -46,19 +46,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Password)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BirthDate)
+                @Html.DisplayFor(modelItem => item.IsInstructor)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Professor)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                @*<a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
             </td>
         </tr>
 }

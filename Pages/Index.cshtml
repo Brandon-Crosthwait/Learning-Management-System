@@ -5,7 +5,26 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome @Model.Username</h1>
+   @*<h1 class="display-4">Welcome @Model.Username</h1>*@
 
-    <a asp-page="./Login">Login</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-page="./Login">Login</a>
+                </th>               
+            </tr>
+            <tr>
+                <th>
+                    <a asp-page="./Signup/Index">Sign Up</a>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+
+
+
+
+
 </div>

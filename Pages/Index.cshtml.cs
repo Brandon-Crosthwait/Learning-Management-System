@@ -11,7 +11,7 @@ namespace LMS.Pages
 {
     public class IndexModel : PageModel
     {
-        public string Username;
+        //public string Username;
 
         private readonly ILogger<IndexModel> _logger;
 
@@ -22,10 +22,10 @@ namespace LMS.Pages
 
         public void OnGet()
         {
-            if (HttpContext != null)
-            {
-                Username = HttpContext.Session.GetString("userFirstName");
-            }
+            //if (HttpContext != null)
+            //{
+            //    Username = HttpContext.Session.GetString("userFirstName");
+            //}
         }
     }
 }

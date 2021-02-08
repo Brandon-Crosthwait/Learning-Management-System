@@ -37,6 +37,7 @@ namespace LMS.Pages.SignUp
                 return Page();
             }
 
+            // Password security using salt and hashing
             byte[] salt = new byte[128 / 8];
 
             using (var rng = RandomNumberGenerator.Create())
@@ -52,7 +53,7 @@ namespace LMS.Pages.SignUp
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
 
-            User.Password = hashed;
+            User.Password = hashed; // users hashed password
 
             _context.User.Add(User);
             await _context.SaveChangesAsync();

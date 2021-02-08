@@ -28,7 +28,7 @@ namespace LMS.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -45,7 +45,7 @@ namespace LMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Professor")
+                    b.Property<bool>("IsInstructor")
                         .HasColumnType("bit");
 
                     b.Property<string>("Salt")
