@@ -34,13 +34,14 @@
                 <span asp-validation-for="User.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.DateOfBirth" class="control-label"></label>
+                <label asp-for="User.DateOfBirth" class="control-label">Date of Birth</label>
                 <input asp-for="User.DateOfBirth" class="form-control" />
                 <span asp-validation-for="User.DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="User.IsInstructor" /> @Html.DisplayNameFor(model => model.User.IsInstructor)
+                    <input class="form-check-input" asp-for="User.IsInstructor" /> @*@Html.DisplayNameFor(model => model.User.IsInstructor)*@
+                    Instructor
                 </label>
             </div>
             <div class="form-group">
@@ -50,9 +51,9 @@
     </div>
 </div>
 
-<div>
+@*<div>
     <a asp-page="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
