@@ -1,0 +1,25 @@
+﻿@page
+@model LMS.Pages.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form method="post" asp-page="Login">
+    <table>
+        <tr>
+            <td>Username</td>
+            <td><input type ="text" asp-for="@Model.Username"/></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" asp-for="@Model.Password"/></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="Login" /></td>
+        </tr>
+    </table>
+</form>

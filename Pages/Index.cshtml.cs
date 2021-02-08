@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,6 +11,8 @@ namespace LMS.Pages
 {
     public class IndexModel : PageModel
     {
+        public string Username;
+
         private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(ILogger<IndexModel> logger)
@@ -19,7 +22,10 @@ namespace LMS.Pages
 
         public void OnGet()
         {
-
+            if (HttpContext != null)
+            {
+                Username = HttpContext.Session.GetString("userFirstName");
+            }
         }
     }
 }
