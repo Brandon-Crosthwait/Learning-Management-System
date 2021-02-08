@@ -9,20 +9,30 @@ namespace LMS.Models
     public class User
     {
         public int ID { get; set; }
+
+        [StringLength(60, MinimumLength = 1)]
+        [Required]
         public string FirstName { get; set; }
+
+        [StringLength(60, MinimumLength = 1)]
+        [Required]
         public string LastName { get; set; }
+
+        [RegularExpression(@"^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$")]
+        [StringLength(255, MinimumLength = 1)]
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [StringLength(60, MinimumLength = 8)]
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string Salt { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
-        public bool Professor { get; set; }
+        public DateTime DateOfBirth { get; set; }
+
+        public Boolean IsInstructor { get; set; }
     }
-
-
 }
