@@ -37,7 +37,7 @@ namespace LMS.Pages
                 // Grab user's salt and store in byte array
                 byte[] salt = Convert.FromBase64String(userRecord.Salt);
 
-                // Hash the user entered passsword
+                // Hash the user entered password
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: Password,
                     salt: salt,
