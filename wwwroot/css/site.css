@@ -121,9 +121,9 @@ body {
     top: 185px;
 }
 
-    .notification-list p {
-        float: left;
-    }
+.notification-list p {
+    float: left;
+}
 
 .clear {
     color: black;
