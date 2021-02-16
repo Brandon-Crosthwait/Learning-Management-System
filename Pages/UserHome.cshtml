@@ -4,8 +4,8 @@
     ViewData["Title"] = "User Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @Model.Username</h1>
+<div class="user-title">
+    <h1>Welcome @Model.Username</h1>
 </div>
 
 <div class="card-container">
@@ -66,3 +66,37 @@
     </div>
 </div>
 
+<div class="notification-bell">
+    <i class="fa fa-bell" aria-hidden="true"></i>
+</div>
+
+<div class="notification">
+    <ul class="notification-list">
+        <li>
+            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
+            <i class="fa fa-times clear" aria-hidden="true"></i>
+        </li>
+        <li>
+            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
+            <i class="fa fa-times clear" aria-hidden="true"></i>
+        </li>
+    </ul>
+</div>
+
+<div class="todo">
+    <h3 class="todo-title">To Do</h3>
+    <ul class="todo-list">
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
+        </li>
+    </ul>
+</div>
