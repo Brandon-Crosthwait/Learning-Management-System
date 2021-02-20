@@ -92,3 +92,65 @@ body {
 .btn {
     background-color: indianred;
 }
+
+/* User Home Page*/
+.user-title {
+    position: center;
+}
+
+/*Notifications*/
+.notification-bell {
+    color: #3b8cff;
+    font-size: 22px;
+    position: relative;
+    margin-right: 50px;
+}
+
+.notification i {
+    color: #3b8cff;
+    font-size: 22px;
+}
+
+.notification-list {
+    position: absolute;
+    border: solid thin;
+    width: 250px;
+    list-style-type: none;
+    padding: 10px;
+    right: 50px;
+    top: 100px;
+}
+
+.notification-list p {
+    float: left;
+}
+
+.clear {
+    color: black;
+    float: right;
+    padding-right: 10px;
+}
+
+/*To Do List*/
+.todo {
+    width: 250px;
+    text-align: left;
+    position: absolute;
+    right: 50px;
+    top: 225px;
+}
+
+.todo-title {
+    text-align: left;
+    border-bottom: solid thin;
+}
+
+.todo h3 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.todo-list {
+    list-style-type: none;
+    padding: 0;
+}
