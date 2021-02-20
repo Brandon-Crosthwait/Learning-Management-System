@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.Pages.Profile
 {
@@ -22,36 +23,53 @@ namespace LMS.Pages.Profile
 
         [BindProperty]
         public User User { get; set; }
+        [BindProperty]
+        public int UserID { get; set; }
+        [BindProperty]
+        public string FirstName { get; set; }
+        [BindProperty]
+        public string LastName { get; set; }
+        [BindProperty]
+        public string Email { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet()
         {
-            if (id == null)
+            // Grab the ID of the user who logged in
+            if (HttpContext != null)
+            {
+                UserID = (int)HttpContext.Session.GetInt32("userID");
+                if (UserID <= 0)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+
+                    FirstName = User.FirstName;
+                    LastName = User.LastName;
+                    Email = User.Email;
+
+                    HttpContext.Session.SetInt32("userID", User.ID);
+                    return Page();
+                }
+            }
+            else
             {
                 return NotFound();
             }
-
-            User = await _context.User.FirstOrDefaultAsync(m => m.ID == id);
-
-            if (User == null)
-            {
-                return NotFound();
-            }
-            return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(User).State = EntityState.Modified;
+            UserID = (int)HttpContext.Session.GetInt32("userID");
+            User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
             try
             {
+                User.FirstName = FirstName;
+                User.LastName = LastName;
+                User.Email = Email;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -65,8 +83,8 @@ namespace LMS.Pages.Profile
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
+            HttpContext.Session.SetInt32("userID", User.ID);
+            return RedirectToPage("./Details");
         }
 
         private bool UserExists(int id)

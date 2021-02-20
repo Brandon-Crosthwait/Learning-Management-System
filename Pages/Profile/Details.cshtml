@@ -5,10 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.User.FirstName's Profile</h1>
 
 <div>
-    <h4>User</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -28,30 +27,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.User.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Password)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Password)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Salt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Salt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.DateOfBirth)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.DateOfBirth)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.IsInstructor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.IsInstructor)
         </dd>
     </dl>
 </div>
