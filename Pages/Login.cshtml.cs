@@ -48,6 +48,7 @@ namespace LMS.Pages
                 // Check if hashed user entered password matches the user account password
                 if (userRecord.Password == hashed)
                 {
+                    HttpContext.Session.SetInt32("userID", userRecord.ID);
                     HttpContext.Session.SetString("userFirstName", userRecord.FirstName);
 
                     return RedirectToPage("UserHome");
