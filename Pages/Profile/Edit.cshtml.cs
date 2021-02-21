@@ -31,6 +31,13 @@ namespace LMS.Pages.Profile
         public string LastName { get; set; }
         [BindProperty]
         public string Email { get; set; }
+        [BindProperty]
+        public string Link1 { get; set; }
+        [BindProperty]
+        public string Link2 { get; set; }
+        [BindProperty]
+        public string Link3 { get; set; }
+
 
         public IActionResult OnGet()
         {
@@ -49,6 +56,9 @@ namespace LMS.Pages.Profile
                     FirstName = User.FirstName;
                     LastName = User.LastName;
                     Email = User.Email;
+                    Link1 = User.Link1;
+                    Link2 = User.Link2;
+                    Link3 = User.Link3;
 
                     return Page();
                 }
@@ -69,6 +79,10 @@ namespace LMS.Pages.Profile
                 User.FirstName = FirstName;
                 User.LastName = LastName;
                 User.Email = Email;
+                User.Link1 = Link1;
+                User.Link2 = Link2;
+                User.Link3 = Link3;
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
