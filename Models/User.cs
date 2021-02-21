@@ -37,5 +37,9 @@ namespace LMS.Models
         public DateTime DateOfBirth { get; set; }
 
         public Boolean IsInstructor { get; set; }
+
+        public string Link1 { get; set; }
+        public string Link2 { get; set; }
+        public string Link3 { get; set; }
     }
 }
