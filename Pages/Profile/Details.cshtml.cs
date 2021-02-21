@@ -46,24 +46,5 @@ namespace LMS.Pages.Profile
             }
         }
 
-        //public async Task<IActionResult> OnGetAsync(int? id)
-        //{
-        //    if (HttpContext != null)
-        //    {
-        //        UserID = (int)HttpContext.Session.GetInt32("userID");
-        //    }
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    User = await _context.User.FirstOrDefaultAsync(m => m.ID == UserID);
-
-        //    if (User == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Page();
-        //}
     }
 }

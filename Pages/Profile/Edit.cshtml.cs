@@ -50,7 +50,6 @@ namespace LMS.Pages.Profile
                     LastName = User.LastName;
                     Email = User.Email;
 
-                    HttpContext.Session.SetInt32("userID", User.ID);
                     return Page();
                 }
             }
@@ -83,7 +82,6 @@ namespace LMS.Pages.Profile
                     throw;
                 }
             }
-            HttpContext.Session.SetInt32("userID", User.ID);
             return RedirectToPage("./Details");
         }
 

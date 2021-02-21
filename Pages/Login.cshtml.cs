@@ -32,7 +32,7 @@ namespace LMS.Pages
             // Grab the user from database using email(username)
             var userRecord = _context.User.Where(u => u.Email == Username).FirstOrDefault();
 
-            if (userRecord != null)
+            if (userRecord != null && Password != null)
             {
                 // Grab user's salt and store in byte array
                 byte[] salt = Convert.FromBase64String(userRecord.Salt);
@@ -63,16 +63,6 @@ namespace LMS.Pages
                 return this.Page();
             }
 
-            //if (Username.Equals("Garrett") && Password.Equals("12345"))
-            //{
-            //    HttpContext.Session.SetString("username", Username);
-
-            //    return RedirectToPage("Index");
-            //}
-            //else
-            //{
-            //    return this.Page();
-            //}
         }
     }
 }

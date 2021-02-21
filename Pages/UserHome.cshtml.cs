@@ -35,7 +35,6 @@ namespace LMS.Pages
                 else
                 {
                     User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                    HttpContext.Session.SetInt32("userID", UserID);
                     return Page();
                 }
             }
