@@ -125,6 +125,11 @@ body {
     float: left;
 }
 
+#notification {
+ display: none;
+ margin-bottom: 50px;
+}
+
 .clear {
     color: black;
     float: right;
@@ -132,12 +137,12 @@ body {
 }
 
 /*To Do List*/
-.todo {
+#todo {
     width: 250px;
     text-align: left;
     position: absolute;
     right: 50px;
-    top: 225px;
+    top: 150px;
 }
 
 .todo-title {

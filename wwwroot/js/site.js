@@ -19,3 +19,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
   });
+
+  function displayNotifications() {
+   var not = document.getElementById("notification")
+   var todo = document.getElementById("todo")
+
+    if(not.style.display === "block")
+    {
+      not.style.display = "none";
+      todo.style.marginTop = "0px";
+    }
+    else
+    {
+      not.style.display = "block";
+      todo.style.marginTop = "75px";
+    }
+  }
