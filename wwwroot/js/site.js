@@ -20,15 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var link1 = document.getElementById('link1');
-    link1.href = link1.textContent;
-    var link2 = document.getElementById('link2');
-    link2.href = link2.textContent;
-    var link3 = document.getElementById('link3');
-    link3.href = link3.textContent;
-});
-
   function displayNotifications() {
    var not = document.getElementById("notification")
    var todo = document.getElementById("todo")
