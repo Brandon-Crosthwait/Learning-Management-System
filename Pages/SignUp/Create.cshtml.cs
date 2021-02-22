@@ -28,11 +28,22 @@ namespace LMS.Pages.SignUp
 
         [BindProperty]
         public User User { get; set; }
+        public DateTime Birthday { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            int age;
+
             if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            Birthday = User.DateOfBirth;
+            age = GetAge(Birthday);
+
+            if (age < 18)
             {
                 return Page();
             }
@@ -59,6 +70,17 @@ namespace LMS.Pages.SignUp
             await _context.SaveChangesAsync();
 
             return RedirectToPage("../Index");
+        }
+
+        int GetAge(DateTime Birthday)
+        {
+            DateTime today = DateTime.Today;
+            int age = today.Year - Birthday.Year;
+
+            if (Birthday > today.AddYears(-age))
+                age--;
+
+            return age;
         }
     }
 }
