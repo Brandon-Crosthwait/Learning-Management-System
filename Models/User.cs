@@ -19,11 +19,29 @@ namespace LMS.Models
         [Required]
         public string LastName { get; set; }
 
+        [StringLength(60, MinimumLength = 0)]
+        public string Address { get; set; }
+
+        [StringLength(60, MinimumLength = 0)]
+        public string City { get; set; }
+
+        [StringLength(60, MinimumLength = 0)]
+        public string State { get; set; }
+
+        [StringLength(10, MinimumLength = 0)]
+        public string Zip { get; set; }
+
+        [StringLength(60, MinimumLength = 0)]
+        public string PhoneNumber { get; set; }
+
         [RegularExpression(@"^([\w-\.]+@([\w-]+\.)+[\w-]{2,6})?$")]
         [StringLength(255, MinimumLength = 1)]
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [StringLength(1000, MinimumLength = 0)]
+        public string BioInfo { get; set; }
 
         [StringLength(60, MinimumLength = 8)]
         [Required]

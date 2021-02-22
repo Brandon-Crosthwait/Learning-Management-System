@@ -35,7 +35,19 @@ namespace LMS.Pages.Profile
         [BindProperty]
         public string LastName { get; set; }
         [BindProperty]
+        public string Address { get; set; }
+        [BindProperty]
+        public string City { get; set; }
+        [BindProperty]
+        public string State { get; set; }
+        [BindProperty]
+        public string Zip { get; set; }
+        [BindProperty]
+        public string PhoneNumber { get; set; }
+        [BindProperty]
         public string Email { get; set; }
+        [BindProperty]
+        public string BioInfo { get; set; }
         [BindProperty]
         public string Link1 { get; set; }
         [BindProperty]
@@ -62,7 +74,13 @@ namespace LMS.Pages.Profile
 
                     FirstName = User.FirstName;
                     LastName = User.LastName;
+                    Address = User.Address;
+                    City = User.City;
+                    State = User.State;
+                    Zip = User.Zip;
+                    PhoneNumber = User.PhoneNumber;
                     Email = User.Email;
+                    BioInfo = User.BioInfo;
                     Link1 = User.Link1;
                     Link2 = User.Link2;
                     Link3 = User.Link3;
@@ -85,10 +103,17 @@ namespace LMS.Pages.Profile
             {
                 User.FirstName = FirstName;
                 User.LastName = LastName;
+                User.Address = Address;
+                User.City = City;
+                User.State = State;
+                User.Zip = Zip;
+                User.PhoneNumber = PhoneNumber;
                 User.Email = Email;
+                User.BioInfo = BioInfo;
                 User.Link1 = Link1;
                 User.Link2 = Link2;
                 User.Link3 = Link3;
+
                 if (Photo != null)
                 {
                     if (User.PhotoPath != null)
