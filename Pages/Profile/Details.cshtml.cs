@@ -1,25 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using LMS.Data;
 using LMS.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace LMS.Pages
+namespace LMS.Pages.Profile
 {
-    public class UserHomeModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly LMS.Data.LMSContext _context;
 
-        public UserHomeModel(LMS.Data.LMSContext context)
+        public DetailsModel(LMS.Data.LMSContext context)
         {
             _context = context;
         }
 
-        public string Username;
-        public int UserID;
+        [BindProperty]
+        public int UserID { get; set; }
         public User User { get; set; }
 
         public IActionResult OnGet()
@@ -43,5 +45,6 @@ namespace LMS.Pages
                 return NotFound();
             }
         }
+
     }
 }
