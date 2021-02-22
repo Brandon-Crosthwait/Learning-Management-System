@@ -70,19 +70,19 @@
             @Html.DisplayNameFor(model => model.User.Link1)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Link1)
+            <a id="link1" href="@Model.Link1" target="_blank">@Html.DisplayFor(model => model.User.Link1)</a>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.User.Link2)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Link2)
+            <a id="link2" href="@Model.Link2" target="_blank">@Html.DisplayFor(model => model.User.Link2)</a>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.User.Link3)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Link3)
+            <a id="link3" href="@Model.Link3" target="_blank">@Html.DisplayFor(model => model.User.Link3)</a>
         </dd>
     </dl>
 </div>

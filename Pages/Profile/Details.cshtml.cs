@@ -23,6 +23,9 @@ namespace LMS.Pages.Profile
         [BindProperty]
         public int UserID { get; set; }
         public User User { get; set; }
+        public string Link1 { get; set; }
+        public string Link2 { get; set; }
+        public string Link3 { get; set; }
 
         public IActionResult OnGet()
         {
@@ -37,6 +40,9 @@ namespace LMS.Pages.Profile
                 else
                 {
                     User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+                    Link1 = User.Link1;
+                    Link2 = User.Link2;
+                    Link3 = User.Link3;
                     return Page();
                 }
             }
