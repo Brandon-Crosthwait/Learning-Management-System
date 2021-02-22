@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.Models
 {
@@ -37,6 +38,8 @@ namespace LMS.Models
         public DateTime DateOfBirth { get; set; }
 
         public Boolean IsInstructor { get; set; }
+
+        public string PhotoPath { get; set; }
 
         public string Link1 { get; set; }
         public string Link2 { get; set; }

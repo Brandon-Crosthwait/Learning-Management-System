@@ -3,12 +3,14 @@
 
 @{
     ViewData["Title"] = "Details";
+    var photoPath = "~/images/" + (Model.User.PhotoPath ?? "noimage.jpg");
 }
 
 <h1>@Model.User.FirstName's Profile</h1>
 
 <div>
     <hr />
+    <img class="imageThumbnail" src="@photoPath" asp-append-version="true" />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.User.FirstName)

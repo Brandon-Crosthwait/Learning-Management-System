@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace LMS.Pages.Profile
 {
     public class EditModel : PageModel
     {
         private readonly LMS.Data.LMSContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public EditModel(LMS.Data.LMSContext context)
+        public EditModel(LMS.Data.LMSContext context,
+                         IWebHostEnvironment webHostEnvironment)
         {
-            _context = context;
+            this._context = context;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
@@ -37,7 +42,9 @@ namespace LMS.Pages.Profile
         public string Link2 { get; set; }
         [BindProperty]
         public string Link3 { get; set; }
-
+        [BindProperty]
+        public IFormFile Photo { get; set; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         public IActionResult OnGet()
         {
@@ -82,6 +89,16 @@ namespace LMS.Pages.Profile
                 User.Link1 = Link1;
                 User.Link2 = Link2;
                 User.Link3 = Link3;
+                if (Photo != null)
+                {
+                    if (User.PhotoPath != null)
+                    {
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
+                        "images", User.PhotoPath);
+                        System.IO.File.Delete(filePath);
+                    }
+                    User.PhotoPath = ProcessUploadedFile();
+                }
 
                 await _context.SaveChangesAsync();
             }
@@ -102,6 +119,24 @@ namespace LMS.Pages.Profile
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.ID == id);
+        }
+
+        private string ProcessUploadedFile()
+        {
+            string uniqueFileName = null;
+
+            if (Photo != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + Photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    Photo.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
     }
 }
