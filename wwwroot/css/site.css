@@ -70,6 +70,7 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+/* Cards Home Page*/
 .card:hover {
     box-shadow: -1px 9px 40px -12px #808080;
 }
@@ -163,4 +164,12 @@ body {
 .imageThumbnail {
     height: 200px;
     width: auto;
+}
+
+.loginpage {
+    text-align: center;
+}
+
+.loginform {
+    margin-left: 35%;
 }
