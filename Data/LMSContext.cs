@@ -15,5 +15,9 @@ namespace LMS.Data
         }
 
         public DbSet<LMS.Models.User> User { get; set; }
+
+        public DbSet<LMS.Models.Course> Course { get; set; }
+
+        public DbSet<LMS.Models.Department> Department { get; set; }
     }
 }
