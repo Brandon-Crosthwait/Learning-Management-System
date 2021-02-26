@@ -10,7 +10,7 @@
 <h4>Course</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -42,25 +42,25 @@
                 <span asp-validation-for="Course.Location" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label days">
+                <label class="form-check-label col-sm-2">
                     <input class="form-check-input" asp-for="@Model.Monday" />
-                    Monday
+                    Mon
                 </label>
-                <label class="form-check-label days">
+                <label class="form-check-label col-sm-2">
                     <input class="form-check-input" asp-for="@Model.Tuesday" />
-                    Tuesday
+                    Tue
                 </label>
-                <label class="form-check-label days">
+                <label class="form-check-label col-sm-2">
                     <input class="form-check-input" asp-for="@Model.Wednesday" />
-                    Wednesday
+                    Wed
                 </label>
-                <label class="form-check-label days">
+                <label class="form-check-label col-sm-2">
                     <input class="form-check-input" asp-for="@Model.Thursday" />
-                    Thursday
+                    Thur
                 </label>
-                <label class="form-check-label days">
+                <label class="form-check-label col-sm-2">
                     <input class="form-check-input" asp-for="@Model.Friday" />
-                    Friday
+                    Fri
                 </label>
             </div>
             <div class="form-group">
@@ -86,7 +86,7 @@
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index">Cancel</a>
 </div>
 
 @section Scripts {

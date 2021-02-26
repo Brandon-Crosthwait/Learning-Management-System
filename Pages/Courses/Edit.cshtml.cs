@@ -113,12 +113,38 @@ namespace LMS.Pages.Courses
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             _context.Attach(Course).State = EntityState.Modified;
+
+            UserID = (int)HttpContext.Session.GetInt32("userID");
+            User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+
+            if (Monday)
+            {
+                Course.Days += "M";
+            }
+            if (Tuesday)
+            {
+                Course.Days += "T";
+            }
+            if (Wednesday)
+            {
+                Course.Days += "W";
+            }
+            if (Thursday)
+            {
+                Course.Days += "Th";
+            }
+            if (Friday)
+            {
+                Course.Days += "F";
+            }
+
+            Course.Instructor = User.LastName + ", " + User.FirstName;
 
             try
             {
