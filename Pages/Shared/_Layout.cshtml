@@ -1,4 +1,24 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+@{ 
+
+    string isInstructor = Context.Session.GetString("isInstructorSession");
+    int UserId = (int)Context.Session.GetInt32("userID");
+    string hidden = "";
+    if (UserId <= 0)
+    {
+        hidden = "hidden";
+    }
+    string linkURL = "/Registration";
+    string linkText = "Registration";
+    if (isInstructor == "True")
+    {
+        linkURL = "/Courses";
+        linkText = "Courses";
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,13 +36,10 @@
             <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-light" asp-page="/UserHome">Home</a>
+                        <a class='nav-link text-light' asp-page='/UserHome'>Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-page="/Courses/Index">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-page="">Dummy Link 2</a>
+                    <li class='nav-item' @hidden>
+                        <a class='nav-link text-light' asp-page='@linkURL'>@linkText</a>
                     </li>
                 </ul>
             </div>
