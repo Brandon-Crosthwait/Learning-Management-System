@@ -23,6 +23,7 @@ namespace LMS.Pages
         public string Username { get; set; }
         [BindProperty]
         public string Password { get; set; }
+
         public void OnGet()
         {
         }
