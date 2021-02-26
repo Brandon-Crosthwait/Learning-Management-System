@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.Pages.Courses
 {
@@ -23,20 +24,89 @@ namespace LMS.Pages.Courses
         [BindProperty]
         public Course Course { get; set; }
 
+        public int UserID { get; set; }
+        public User User { get; set; }
+
+        [BindProperty]
+        public bool Monday { get; set; }
+        [BindProperty]
+        public bool Tuesday { get; set; }
+        [BindProperty]
+        public bool Wednesday { get; set; }
+        [BindProperty]
+        public bool Thursday { get; set; }
+        [BindProperty]
+        public bool Friday { get; set; }
+
+        public SelectList DepartmentList { get; set; }
+
+        public void PopulateDepartmentDropDownList(LMSContext _context,
+            object selectedDepartment = null)
+        {
+            var departmentsQuery = from d in _context.Department
+                                   orderby d.Name // Sort by name.
+                                   select d;
+
+            DepartmentList = new SelectList(departmentsQuery.AsNoTracking(),
+                        "ID", "Code", selectedDepartment);
+        }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (Course == null)
+            if (HttpContext != null)
             {
-                return NotFound();
+                UserID = (int)HttpContext.Session.GetInt32("userID");
+                if (UserID <= 0)
+                {
+                    return new RedirectToPageResult("/Login");
+                }
+                else
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
+
+                    PopulateDepartmentDropDownList(_context);
+                    Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == id);
+
+                    string thSubS = "Th";
+
+                    if (Course.Days.Contains('M'))
+                    {
+                        Monday = true;
+                    }
+                    if (Course.Days.Contains('T'))
+                    {
+                        Tuesday = true;
+                    }
+                    if (Course.Days.Contains('W'))
+                    {
+                        Wednesday = true;
+                    }
+                    if (Course.Days.Contains(thSubS))
+                    {
+                        Thursday = true;
+                    }
+                    if (Course.Days.Contains('F'))
+                    {
+                        Friday = true;
+                    }
+
+                    if (Course == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Page();
+                }
             }
-            return Page();
+            else
+            {
+                return new RedirectToPageResult("/Login");
+            }
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

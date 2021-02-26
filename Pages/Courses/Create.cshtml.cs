@@ -55,7 +55,7 @@ namespace LMS.Pages.Courses
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 if (UserID <= 0)
                 {
-                    return NotFound();
+                    return new RedirectToPageResult("/Login");
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace LMS.Pages.Courses
             }
             else
             {
-                return NotFound();
+                return new RedirectToPageResult("/Login");
             }
         }
 
@@ -79,6 +79,7 @@ namespace LMS.Pages.Courses
             //{
             //    return Page();
             //}
+
             UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 

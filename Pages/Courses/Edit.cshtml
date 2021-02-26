@@ -26,8 +26,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Course.Department" class="control-label"></label>
-                <input asp-for="Course.Department" class="form-control" />
-                <span asp-validation-for="Course.Department" class="text-danger"></span>
+                <select asp-for="Course.Department" class="form-control"
+                        asp-items="@Model.DepartmentList">
+                    <option value="">-- Select Department --</option>
+                </select>
+                <span asp-validation-for="Course.Department" class="text-danger" />
             </div>
             <div class="form-group">
                 <label asp-for="Course.Description" class="control-label"></label>
@@ -39,10 +42,27 @@
                 <input asp-for="Course.Location" class="form-control" />
                 <span asp-validation-for="Course.Location" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Course.Days" class="control-label"></label>
-                <input asp-for="Course.Days" class="form-control" />
-                <span asp-validation-for="Course.Days" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label days">
+                    <input class="form-check-input" asp-for="@Model.Monday" />
+                    Monday
+                </label>
+                <label class="form-check-label days">
+                    <input class="form-check-input" asp-for="@Model.Tuesday" />
+                    Tuesday
+                </label>
+                <label class="form-check-label days">
+                    <input class="form-check-input" asp-for="@Model.Wednesday" />
+                    Wednesday
+                </label>
+                <label class="form-check-label days">
+                    <input class="form-check-input" asp-for="@Model.Thursday" />
+                    Thursday
+                </label>
+                <label class="form-check-label days">
+                    <input class="form-check-input" asp-for="@Model.Friday" />
+                    Friday
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Course.Time" class="control-label"></label>
@@ -67,7 +87,7 @@
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index">Cancel</a>
 </div>
 
 @section Scripts {

@@ -35,7 +35,7 @@ namespace LMS.Pages.Profile
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 if (UserID <= 0)
                 {
-                    return NotFound();
+                    return new RedirectToPageResult("/Login");
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace LMS.Pages.Profile
             }
             else
             {
-                return NotFound();
+                return new RedirectToPageResult("/Login");
             }
         }
 
