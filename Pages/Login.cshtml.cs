@@ -50,6 +50,7 @@ namespace LMS.Pages
                 {
                     HttpContext.Session.SetInt32("userID", userRecord.ID);
                     HttpContext.Session.SetString("userFirstName", userRecord.FirstName);
+                    HttpContext.Session.SetString("isInstructorSession", userRecord.IsInstructor.ToString());
 
                     return RedirectToPage("UserHome");
                 }
