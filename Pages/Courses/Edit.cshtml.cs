@@ -38,6 +38,11 @@ namespace LMS.Pages.Courses
         [BindProperty]
         public bool Friday { get; set; }
 
+        [BindProperty]
+        public DateTime StartTime { get; set; }
+        [BindProperty]
+        public DateTime EndTime { get; set; }
+
         public SelectList DepartmentList { get; set; }
 
         public void PopulateDepartmentDropDownList(LMSContext _context,
@@ -71,6 +76,12 @@ namespace LMS.Pages.Courses
 
                     PopulateDepartmentDropDownList(_context);
                     Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == id);
+
+                    string startTime = Course.Time.Substring(0, Course.Time.IndexOf('-') - 1);
+                    string endTime = Course.Time.Substring(Course.Time.LastIndexOf('-') + 1);
+
+                    StartTime = Convert.ToDateTime(startTime);
+                    EndTime = Convert.ToDateTime(endTime);
 
                     string thSubS = "Th";
 
@@ -143,6 +154,8 @@ namespace LMS.Pages.Courses
             {
                 Course.Days += "F";
             }
+
+            Course.Time = StartTime.ToString("h:mmtt") + " - " + EndTime.ToString("h:mmtt");
 
             Course.Instructor = User.LastName + ", " + User.FirstName;
 

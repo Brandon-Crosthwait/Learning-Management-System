@@ -64,12 +64,17 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Course.Time" class="control-label"></label>
-                <input asp-for="Course.Time" class="form-control" />
-                <span asp-validation-for="Course.Time" class="text-danger"></span>
+                <label asp-for="@Model.StartTime" class="control-label">Start Time</label>
+                <input type="time" asp-for="@Model.StartTime" class="form-control" value="" />
+                <span asp-validation-for="@Model.StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Course.CreditHours" class="control-label"></label>
+                <label asp-for="@Model.EndTime" class="control-label">End Time</label>
+                <input type="time" asp-for="@Model.EndTime" class="form-control" value="" />
+                <span asp-validation-for="@Model.EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CreditHours" class="control-label">Credit Hours</label>
                 <input asp-for="Course.CreditHours" class="form-control" />
                 <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
             </div>
