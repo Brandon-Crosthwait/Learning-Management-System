@@ -20,7 +20,7 @@ namespace LMS.Pages.Courses
             _context = context;
         }
 
-        public IList<Course> Course { get;set; }
+        public IList<Course> Courses { get;set; }
 
         public int UserID { get; set; }
         public User User { get; set; }
@@ -39,7 +39,7 @@ namespace LMS.Pages.Courses
                     UserID = (int)HttpContext.Session.GetInt32("userID");
                     User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
                     string instructor = User.LastName + ", " + User.FirstName;
-                    Course = _context.Course.Where(u => u.Instructor == instructor).ToList();
+                    Courses = _context.Course.Where(u => u.Instructor == instructor).ToList();
                     return Page();
                 }
             }
