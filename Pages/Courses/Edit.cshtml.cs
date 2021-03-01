@@ -38,6 +38,11 @@ namespace LMS.Pages.Courses
         [BindProperty]
         public bool Friday { get; set; }
 
+        [BindProperty]
+        public DateTime StartTime { get; set; }
+        [BindProperty]
+        public DateTime EndTime { get; set; }
+
         public SelectList DepartmentList { get; set; }
 
         public void PopulateDepartmentDropDownList(LMSContext _context,
@@ -71,6 +76,12 @@ namespace LMS.Pages.Courses
 
                     PopulateDepartmentDropDownList(_context);
                     Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == id);
+
+                    string startTime = Course.Time.Substring(0, Course.Time.IndexOf('-') - 1);
+                    string endTime = Course.Time.Substring(Course.Time.LastIndexOf('-') + 1);
+
+                    StartTime = Convert.ToDateTime(startTime);
+                    EndTime = Convert.ToDateTime(endTime);
 
                     string thSubS = "Th";
 
@@ -113,12 +124,40 @@ namespace LMS.Pages.Courses
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             _context.Attach(Course).State = EntityState.Modified;
+
+            UserID = (int)HttpContext.Session.GetInt32("userID");
+            User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+
+            if (Monday)
+            {
+                Course.Days += "M";
+            }
+            if (Tuesday)
+            {
+                Course.Days += "T";
+            }
+            if (Wednesday)
+            {
+                Course.Days += "W";
+            }
+            if (Thursday)
+            {
+                Course.Days += "Th";
+            }
+            if (Friday)
+            {
+                Course.Days += "F";
+            }
+
+            Course.Time = StartTime.ToString("h:mmtt") + " - " + EndTime.ToString("h:mmtt");
+
+            Course.Instructor = User.LastName + ", " + User.FirstName;
 
             try
             {

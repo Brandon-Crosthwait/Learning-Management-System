@@ -36,10 +36,10 @@ namespace LMS.Models
         [StringLength(10, MinimumLength = 1)]
         [Required]
         public string Days { get; set; }
-        
-        //[DataType(DataType.Time)]
+
+        [StringLength(60, MinimumLength = 1)]
         [Required]
-        public string Time { get; set; }
+        public String Time { get; set; }
 
         [Required]
         public int CreditHours { get; set; }
