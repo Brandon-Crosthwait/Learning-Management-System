@@ -29,6 +29,9 @@ namespace LMS.Models
         [Required]
         public string Instructor { get; set; }
 
+        [Required]
+        public int InstructorID { get; set; }
+
         [StringLength(60, MinimumLength = 1)]
         [Required]
         public string Location { get; set; }
