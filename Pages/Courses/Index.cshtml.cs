@@ -20,7 +20,8 @@ namespace LMS.Pages.Courses
             _context = context;
         }
 
-        public IList<Course> Courses { get;set; }
+        public List<Course> Courses { get;set; }
+        public IList<LMS.Models.Registration> RegistrationRecords { get; set; }
 
         public int UserID { get; set; }
         public User User { get; set; }
@@ -37,9 +38,46 @@ namespace LMS.Pages.Courses
                 else
                 {
                     UserID = (int)HttpContext.Session.GetInt32("userID");
-                    User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                    string instructor = User.LastName + ", " + User.FirstName;
-                    Courses = _context.Course.Where(u => u.Instructor == instructor).ToList();
+
+                    //Stores boolean string for whether the user is an instructor or student
+                    string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+                    
+                    if (IsInstructor == "True")  //User is an instructor
+                    {
+                        User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+                        string instructor = User.LastName + ", " + User.FirstName;
+                        Courses = _context.Course.Where(u => u.Instructor == instructor).ToList();
+                    }
+                    else  //User is a student
+                    {
+                        List<int> courseNum = new List<int>();
+                        
+                        //Pulls registration records from db
+                        RegistrationRecords = _context.Registration.Where(u => u.Student == UserID).ToList();
+
+                        //Pulls course numbers for user
+                        foreach (LMS.Models.Registration record in RegistrationRecords)
+                        {
+                            if (record.Student == UserID)
+                            {
+                                courseNum.Add(record.Course);
+                            }
+                        }
+
+                        Courses = new List<Course>();
+
+                        //Searches Course table for the user's course numbers
+                        foreach (int num in courseNum)
+                        {
+                            Course course = _context.Course.Where(u => u.ID == num).FirstOrDefault();
+
+                            if (course != null)
+                            {
+                                Courses.Add(course);
+                            }
+                        }
+                    }
                     return Page();
                 }
             }
