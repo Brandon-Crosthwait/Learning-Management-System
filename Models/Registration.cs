@@ -11,10 +11,10 @@ namespace LMS.Models
         public int ID { get; set; }
 
         [Required]
-        public int CourseID { get; set; }
+        public int Course { get; set; }
 
         [Required]
-        public int UserID { get; set; }
+        public int Student { get; set; }
 
     }
 }

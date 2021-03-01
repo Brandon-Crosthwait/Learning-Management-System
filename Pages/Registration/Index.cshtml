@@ -1,15 +1,10 @@
 ﻿@page
-@model LMS.Pages.Registration.IndexModel
+@model LMS.Pages.Registrations.IndexModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -20,34 +15,21 @@
                 @Html.DisplayNameFor(model => model.Course[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Course[0].Instructor)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Course[0].Location)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Days)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Course[0].Time)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].CreditHours)
+                Register
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Capacity)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Course) {
+    @foreach (var item in Model.Course) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Number)
@@ -56,35 +38,32 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Instructor)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Days)
+                @Html.DisplayFor(modelItem => item.Days) @Html.DisplayFor(modelItem => item.Time)
             </td>
+            @foreach (var reg in Model.RegList) {
+            if (reg.Course == item.ID) {
+                Model.registerButton = ("Unregister");
+                break;
+            }
+            else {
+                Model.registerButton = ("Register");
+            }
+            }
             <td>
-                @Html.DisplayFor(modelItem => item.Time)
+                <form asp-page-handler="view" method="post">
+                    <button class="btn btn-default">@Model.registerButton</button>
+                    <input type="hidden" name="course" value="@item.ID" />
+                </form>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreditHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacity)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+
         </tr>
+
 }
     </tbody>
 </table>
