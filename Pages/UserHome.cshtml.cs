@@ -45,7 +45,7 @@ namespace LMS.Pages
                     string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
 
                     //Pulls data for cards
-                    if (IsInstructor == "True")  //Instructor is logged in
+                    if (IsInstructor == "True")  //User is an instructor
                     {
                         //LinQ statement to filter data in db
                         var courses = from c in _context.Course
@@ -65,7 +65,7 @@ namespace LMS.Pages
                        
                         CourseList = await courses.ToListAsync();
 
-                    } else  //Student is logged in
+                    } else  //User is a student
                     {
                         var courses = from c in _context.Course
                                       join d in _context.Department on c.Department equals d.ID.ToString()
