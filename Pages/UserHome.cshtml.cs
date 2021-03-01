@@ -41,22 +41,49 @@ namespace LMS.Pages
                 {
                     User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
-                    var courses = from c in _context.Course
-                                  join d in _context.Department on c.Department equals d.ID.ToString()
-                                  join u in _context.User on c.Instructor equals u.ID.ToString()
-                      
-                    select new Course
-                    {
-                        Number = c.Number,
-                        Name = c.Name,
-                        Instructor = User.FirstName + " " + User.LastName,
-                        Location = c.Location,
-                        Days = c.Days,
-                        Time = c.Time,
-                        Department = d.Code
-                    };
+                    //Stores boolean string for whether the user is an instructor or student
+                    string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
 
-                    CourseList = await courses.ToListAsync();
+                    //Pulls data for cards
+                    if (IsInstructor == "True")  //Instructor is logged in
+                    {
+                        var courses = from c in _context.Course
+                                      join d in _context.Department on c.Department equals d.ID.ToString()
+                                      where c.InstructorID == UserID
+
+                                      select new Course
+                                      {
+                                          Number = c.Number,
+                                          Name = c.Name,
+                                          Instructor = c.Instructor,
+                                          Location = c.Location,
+                                          Days = c.Days,
+                                          Time = c.Time,
+                                          Department = d.Code
+                                      };
+
+                        CourseList = await courses.ToListAsync();
+
+                    } else  //Student is logged in
+                    {
+                        var courses = from c in _context.Course
+                                      join d in _context.Department on c.Department equals d.ID.ToString()
+                                      join r in _context.Registration on c.ID equals r.CourseID
+                                      join u in _context.User on r.UserID equals u.ID
+
+                                      select new Course
+                                      {
+                                          Number = c.Number,
+                                          Name = c.Name,
+                                          Instructor = c.Instructor,
+                                          Location = c.Location,
+                                          Days = c.Days,
+                                          Time = c.Time,
+                                          Department = d.Code
+                                      };
+
+                         CourseList = await courses.ToListAsync();
+                    }
 
                     return Page();
                 }
