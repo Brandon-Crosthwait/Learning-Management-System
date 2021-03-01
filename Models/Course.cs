@@ -37,9 +37,9 @@ namespace LMS.Models
         [Required]
         public string Days { get; set; }
         
-        [DataType(DataType.Time)]
+        //[DataType(DataType.Time)]
         [Required]
-        public DateTime Time { get; set; }
+        public string Time { get; set; }
 
         [Required]
         public int CreditHours { get; set; }
