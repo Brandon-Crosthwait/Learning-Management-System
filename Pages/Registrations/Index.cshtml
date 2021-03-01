@@ -4,17 +4,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div>
-    <form class="col-md-9">
-        <p>
-            Title: <input type="text" asp-for="SearchString" />
-            <select asp-for="Department" asp-items="Model.Departments">
-                <option value="">All</option>
-            </select>
-            <input type="submit" value="Filter" />
-        </p>
-    </form>
-</div>
+
 <table class="table">
     <thead>
         <tr>
