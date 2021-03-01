@@ -157,6 +157,7 @@ namespace LMS.Pages.Courses
 
             Course.Time = StartTime.ToString("h:mmtt") + " - " + EndTime.ToString("h:mmtt");
 
+            Course.InstructorID = User.ID;
             Course.Instructor = User.LastName + ", " + User.FirstName;
 
             try
