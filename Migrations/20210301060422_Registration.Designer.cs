@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Migrations
 {
     [DbContext(typeof(LMSContext))]
-    [Migration("20210228224604_Registration")]
+    [Migration("20210301060422_Registration")]
     partial class Registration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace LMS.Migrations
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
+
+                    b.Property<int>("InstructorID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Location")
                         .IsRequired()

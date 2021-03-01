@@ -1,5 +1,4 @@
-﻿  
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,16 +20,16 @@ namespace LMS.Pages.Registrations
             _context = context;
         }
 
-        public IList<Course> Course { get;set; }
-        public IList<Registration> RegList{ get;set; }
+        public IList<Course> Course { get; set; }
+        public IList<Registration> RegList { get; set; }
         public string registerButton = "Register";
 
         [BindProperty]
         public int UserID { get; set; }
         public User User { get; set; }
-        
+
         [BindProperty]
-        public Registration Registration {get; set;}
+        public Registration Registration { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -44,16 +43,18 @@ namespace LMS.Pages.Registrations
             UserID = (int)HttpContext.Session.GetInt32("userID");
             RegList = _context.Registration.Where(u => u.Student == UserID).ToList();
             var currRegistration = RegList.Where(u => u.Course == course).FirstOrDefault();
-            if(currRegistration != null){
+            if (currRegistration != null)
+            {
                 _context.Registration.Remove(currRegistration);
             }
-            else{
+            else
+            {
                 Registration.Course = course;
                 Registration.Student = UserID;
                 _context.Registration.Add(Registration);
             }
             await _context.SaveChangesAsync();
-            return RedirectToPage("./Index");               
+            return RedirectToPage("./Index");
         }
     }
 }
