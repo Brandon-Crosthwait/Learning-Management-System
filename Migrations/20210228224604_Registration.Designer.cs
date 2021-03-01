@@ -106,10 +106,10 @@ namespace LMS.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseID")
+                    b.Property<int>("Course")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("Student")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
