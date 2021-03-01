@@ -47,6 +47,7 @@ namespace LMS.Pages
                     //Pulls data for cards
                     if (IsInstructor == "True")  //Instructor is logged in
                     {
+                        //LinQ statement to filter data in db
                         var courses = from c in _context.Course
                                       join d in _context.Department on c.Department equals d.ID.ToString()
                                       where c.InstructorID == UserID
@@ -61,15 +62,15 @@ namespace LMS.Pages
                                           Time = c.Time,
                                           Department = d.Code
                                       };
-
+                       
                         CourseList = await courses.ToListAsync();
 
                     } else  //Student is logged in
                     {
                         var courses = from c in _context.Course
                                       join d in _context.Department on c.Department equals d.ID.ToString()
-                                      join r in _context.Registration on c.ID equals r.CourseID
-                                      join u in _context.User on r.UserID equals u.ID
+                                      join r in _context.Registration on c.ID equals r.Course
+                                      where r.Student == UserID
 
                                       select new Course
                                       {

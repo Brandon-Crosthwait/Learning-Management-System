@@ -12,8 +12,8 @@ namespace LMS.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CourseID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: false)
+                    Course = table.Column<int>(type: "int", nullable: false),
+                    Student = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
