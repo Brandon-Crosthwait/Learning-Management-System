@@ -9,110 +9,57 @@
 </div>
 
 <div class="card-container">
-    <div class="card">
-        <div class="card-body">
+    @foreach (var item in Model.CourseList)
+    {
+        <div class="card">
+            <a href="https://localhost:44346/Courses"></a>
             <div class="card-title">
-                <h3>CS 3230</h3>
-                <h4>Object Oriented User Interface Development with Java</h4>
+                <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
+                <h5>@Html.DisplayFor(model => item.Name)</h5>
             </div>
             <div class="card-info">
                 <h5>Instructor:</h5>
-                <h6>Professor A</h6>
+                <h6>@Html.DisplayFor(model => item.Instructor)</h6>
                 <h5>Meeting Location:</h5>
-                <h6>Weber State Campus</h6>
-                <h5>Meeting Time:</h5>
-                <h6>Tuesday/Thursday 11:00AM-12:50PM</h6>
+                <h6>@Html.DisplayFor(model => item.Location)</h6>
+                <h5>Meeting Day/Time:</h5>
+                <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
             </div>
-            <input class="btn" type="submit" value="Drop Course" />
-        </div>
-    </div>
-
-
-    <div class="card">
-        <div class="card-body">
-            <div class="card-title">
-                <h3>CS 1410</h3>
-                <h4>Programming 1</h4>
-            </div>
-            <div class="card-info">
-                <h5>Instructor:</h5>
-                <h6>Professor B</h6>
-                <h5>Meeting Location:</h5>
-                <h6>Weber State Campus</h6>
-                <h5>Meeting Time:</h5>
-                <h6>Monday/Wednesday 9:00AM-10:50AM</h6>
-            </div>
-            <input class="btn" type="submit" value="Drop Course" />
-        </div>
-    </div>
-
-
-    <div class="card">
-        <div class="card-body">
-            <div class="card-title">
-                <h3>CS 2420</h3>
-                <h4>Introduction to Data Structures and Algorithms</h4>
-            </div>
-            <div class="card-info">
-                <h5>Instructor:</h5>
-                <h6>Professor C</h6>
-                <h5>Meeting Location:</h5>
-                <h6>Weber State Campus</h6>
-                <h5>Meeting Time:</h5>
-                <h6>Monday/Wednesday 5:00PM-6:50PM</h6>
-            </div>
-            <input class="btn" type="submit" value="Drop Course" />
-        </div>
-    </div>
+         </div>
+    }
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            <h3>CS 2705</h3>
-            <h4>Networking Fundamentals and Design</h4>
-        </div>
-        <div class="card-info">
-            <h5>Instructor:</h5>
-            <h6>Professor D</h6>
-            <h5>Meeting Location:</h5>
-            <h6>Weber State Campus</h6>
-            <h5>Meeting Time:</h5>
-            <h6>Tuesday/Thursday 5:00PM-6:50PM</h6>
-        </div>
-        <input class="btn" type="submit" value="Drop Course" />
+    <div id="notification">
+        <ul class="notification-list">
+            <li>
+                <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
+                <i class="fa fa-times clear" aria-hidden="true"></i>
+            </li>
+            <li>
+                <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
+                <i class="fa fa-times clear" aria-hidden="true"></i>
+            </li>
+        </ul>
     </div>
-</div>
 
-<div id="notification">
-    <ul class="notification-list">
-        <li>
-            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
-            <i class="fa fa-times clear" aria-hidden="true"></i>
-        </li>
-        <li>
-            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
-            <i class="fa fa-times clear" aria-hidden="true"></i>
-        </li>
-    </ul>
-</div>
+    <div id="todo">
+        <h3 class="todo-title">To Do</h3>
+        <ul class="todo-list">
+            <li>
+                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
+            </li>
+            <li>
+                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
+            </li>
+            <li>
+                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
+            </li>
+            <li>
+                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
+            </li>
+        </ul>
+    </div>
 
-<div id="todo">
-    <h3 class="todo-title">To Do</h3>
-    <ul class="todo-list">
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
-        </li>
-    </ul>
-</div>
+    <div id='calendar'></div>
 
-<div id='calendar'></div>
+
