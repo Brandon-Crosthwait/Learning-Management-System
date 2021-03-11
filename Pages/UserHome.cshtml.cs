@@ -54,6 +54,7 @@ namespace LMS.Pages
 
                                       select new Course
                                       {
+                                          ID = c.ID,
                                           Number = c.Number,
                                           Name = c.Name,
                                           Instructor = c.Instructor,
@@ -74,6 +75,7 @@ namespace LMS.Pages
 
                                       select new Course
                                       {
+                                          ID = c.ID,
                                           Number = c.Number,
                                           Name = c.Name,
                                           Instructor = c.Instructor,
@@ -93,6 +95,13 @@ namespace LMS.Pages
             {
                 return new RedirectToPageResult("/Login");
             }
+        }
+
+        public async Task<IActionResult> OnPostAsync(int course)
+        {
+            HttpContext.Session.SetInt32("currCourse", course);
+
+            return new RedirectToPageResult("./Courses/Assignments/Index");
         }
     }
 }

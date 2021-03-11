@@ -8,58 +8,64 @@
     <h1>Welcome @Model.User.FirstName</h1>
 </div>
 
+
 <div class="card-container">
     @foreach (var item in Model.CourseList)
     {
-        <div class="card">
-            <a href="https://localhost:44346/Courses"></a>
-            <div class="card-title">
-                <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
-                <h5>@Html.DisplayFor(model => item.Name)</h5>
-            </div>
-            <div class="card-info">
-                <h5>Instructor:</h5>
-                <h6>@Html.DisplayFor(model => item.Instructor)</h6>
-                <h5>Meeting Location:</h5>
-                <h6>@Html.DisplayFor(model => item.Location)</h6>
-                <h5>Meeting Day/Time:</h5>
-                <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
-            </div>
-         </div>
+        <form asp-page-handler="view" method="post">
+            <input type="hidden" name="course" value="@item.ID" />
+            <button type="submit">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
+                        <h5>@Html.DisplayFor(model => item.Name)</h5>
+                    </div>
+                    <div class="card-info">
+                        <h5>Instructor:</h5>
+                        <h6>@Html.DisplayFor(model => item.Instructor)</h6>
+                        <h5>Meeting Location:</h5>
+                        <h6>@Html.DisplayFor(model => item.Location)</h6>
+                        <h5>Meeting Day/Time:</h5>
+                        <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
+                    </div>
+                </div>
+            </button>
+        </form>
     }
 </div>
 
-    <div id="notification">
-        <ul class="notification-list">
-            <li>
-                <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
-                <i class="fa fa-times clear" aria-hidden="true"></i>
-            </li>
-            <li>
-                <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
-                <i class="fa fa-times clear" aria-hidden="true"></i>
-            </li>
-        </ul>
-    </div>
 
-    <div id="todo">
-        <h3 class="todo-title">To Do</h3>
-        <ul class="todo-list">
-            <li>
-                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
-            </li>
-            <li>
-                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
-            </li>
-            <li>
-                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
-            </li>
-            <li>
-                <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
-            </li>
-        </ul>
-    </div>
+<div id="notification">
+    <ul class="notification-list">
+        <li>
+            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
+            <i class="fa fa-times clear" aria-hidden="true"></i>
+        </li>
+        <li>
+            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
+            <i class="fa fa-times clear" aria-hidden="true"></i>
+        </li>
+    </ul>
+</div>
 
-    <div id='calendar'></div>
+<div id="todo">
+    <h3 class="todo-title">To Do</h3>
+    <ul class="todo-list">
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
+        </li>
+        <li>
+            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
+        </li>
+    </ul>
+</div>
+
+<div id='calendar'></div>
 
 
