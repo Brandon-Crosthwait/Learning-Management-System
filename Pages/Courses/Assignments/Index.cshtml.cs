@@ -30,16 +30,18 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public async Task OnGetAsync()
         {
+            // Retrieve the selected Course to display proper course info
             int courseID = (int)HttpContext.Session.GetInt32("currCourse");
-
             Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);
 
+            // Retrieve the Department so that the code can be displayed on page
             if (Int32.TryParse(Course.Department, out int departmentID))
             {
                 Department = await _context.Department.FirstOrDefaultAsync(m => m.ID == departmentID);
             }
-            
-            Assignment = await _context.Assignment.ToListAsync();
+
+            // Display the list of Assignments for the selected Course
+            Assignment = await _context.Assignment.Where(x => x.CourseID == courseID).ToListAsync();
         }
     }
 }

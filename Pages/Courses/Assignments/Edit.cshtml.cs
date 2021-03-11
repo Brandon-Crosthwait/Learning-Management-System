@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.Pages.Courses.CourseInfo.Assignments
 {
@@ -23,12 +24,24 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         [BindProperty]
         public Assignment Assignment { get; set; }
 
+        [BindProperty]
+        public Course Course { get; set; }
+
+        public SelectList SubmissionList { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
+            List<SelectListItem> types = new List<SelectListItem>();
+
+            types.Add(new SelectListItem() { Text = "Text Box Entry", Value = "Text Box Entry" });
+            types.Add(new SelectListItem() { Text = "File Upload", Value = "File Upload" });
+
+            SubmissionList = new SelectList(types, "Value", "Text");
 
             Assignment = await _context.Assignment.FirstOrDefaultAsync(m => m.ID == id);
 
@@ -43,10 +56,10 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            int courseID = (int)HttpContext.Session.GetInt32("currCourse");
+            Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);
+
+            Assignment.CourseID = Course.ID;
 
             _context.Attach(Assignment).State = EntityState.Modified;
 
