@@ -1,0 +1,50 @@
+﻿@page
+@model LMS.Pages.Courses.CourseInfo.Assignments.IndexModel
+
+@{
+    var pageTitle = Model.Department.Code + " " + Model.Course.Number;
+    ViewData["Title"] = pageTitle;
+}
+
+<h1>@pageTitle: @Model.Course.Name</h1>
+
+<p>
+    <h2>Assignments</h2>
+    <a asp-page="Create">Add Assignment</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Assignment[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Assignment[0].Due)
+            </th>
+            <th>
+                Submission Type
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Assignment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Due)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubmissionType)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> @*|
+                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
