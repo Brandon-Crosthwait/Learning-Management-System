@@ -6,7 +6,7 @@
     ViewData["Title"] = pageTitle;
 }
 
-<h1>@pageTitle: @Model.Course.Name</h1>
+<h1>@pageTitle - @Model.Course.Name</h1>
 
 <p>
     <h2>Assignments</h2>
@@ -28,13 +28,15 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Assignment) {
+@foreach (var item in Model.Assignment)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Due)
+                @*@Html.DisplayFor(modelItem => item.Due)*@
+                @item.Due.ToString("dddd, MM/dd h:mm tt")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SubmissionType)
