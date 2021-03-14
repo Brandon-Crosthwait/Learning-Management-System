@@ -21,5 +21,7 @@ namespace LMS.Data
         public DbSet<LMS.Models.Department> Department { get; set; }
 
         public DbSet<LMS.Models.Registration> Registration { get; set; }
+
+        public DbSet<LMS.Models.Assignment> Assignment { get; set; }
     }
 }
