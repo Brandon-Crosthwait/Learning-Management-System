@@ -22,7 +22,7 @@ namespace LMS.Models
 
         [Required]
         [DataType(DataType.DateTime)]
-        public string Due { get; set; }
+        public DateTime Due { get; set; }
 
         [Required]
         public string SubmissionType { get; set; }
