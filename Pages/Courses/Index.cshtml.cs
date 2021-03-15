@@ -21,7 +21,6 @@ namespace LMS.Pages.Courses
         }
 
         public List<Course> Courses { get;set; }
-        public IList<LMS.Models.Registration> RegistrationRecords { get; set; }
 
         public int UserID { get; set; }
         public User User { get; set; }
@@ -52,7 +51,9 @@ namespace LMS.Pages.Courses
                     else  //User is a student
                     {
                         List<int> courseNum = new List<int>();
-                        
+
+                        List<Registration> RegistrationRecords;
+
                         //Pulls registration records from db
                         RegistrationRecords = _context.Registration.Where(u => u.Student == UserID).ToList();
 

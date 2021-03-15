@@ -48,24 +48,20 @@
     </ul>
 </div>
 
+
 <div id="todo">
     <h3 class="todo-title">To Do</h3>
     <ul class="todo-list">
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 1 - 01/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 2 - 02/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 3 - 03/01/2021</p>
-        </li>
-        <li>
-            <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&emsp;Assignment 4 - 04/01/2021</p>
-        </li>
+        @for (int i = 0; i < Model.AssignmentList.Count; i++)
+        {
+            <li>
+                <p><i class="fa fa-pencil-square-o" aria-hidden="true">&emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
+                    <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)</i></p>
+            </li>
+        }
     </ul>
-</div>
+ </div>
 
-<div id='calendar'></div>
 
+ <div id='calendar'></div>
 
