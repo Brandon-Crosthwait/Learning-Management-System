@@ -172,7 +172,16 @@ namespace LMS.Pages
         {
             HttpContext.Session.SetInt32("currCourse", course);
 
-            return new RedirectToPageResult("./Courses/Assignments/Index");
+            string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+            if (IsInstructor == "True")
+            {
+                return new RedirectToPageResult("./Courses/Assignments/Index");
+            }
+            else
+            {
+                return new RedirectToPageResult("/UserHome");
+            }
         }
 
         /// <summary>
