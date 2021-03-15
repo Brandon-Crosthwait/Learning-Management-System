@@ -73,8 +73,8 @@
       height: 225,
       nextDayThreshold: '24:00:00',
       events: [
-          @{var lastItem = Model.AssignmentList.Last(); }
-          @foreach (var item in Model.AssignmentList) {
+          @{var lastItem = Model.Assignments.Last(); }
+          @foreach (var item in Model.Assignments) {
                     @:{
                         @: title: ('@item.Title.ToString()'),
                         @: start: ('@item.Due.ToString("yyyy-MM-ddTHH\\:mm")'),
