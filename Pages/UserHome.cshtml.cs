@@ -202,7 +202,7 @@ namespace LMS.Pages
         }
 
         /// <summary>
-        /// Orders a list or assignments by due date
+        /// Orders a list of assignments by due date
         /// </summary>
         private void OrderAssignments()
         {
