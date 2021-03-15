@@ -1,0 +1,16 @@
+﻿@page
+@model LMS.Pages.Tuition.IndexModel
+
+@{ 
+    ViewData["Title"] = "Index";
+    var tuition = 0.00;
+    foreach (var item in Model.CourseList)
+    {
+        tuition += item.CreditHours * 100.00;
+    }
+}
+<div class="col-md-9">
+    <p> Tuition</p>
+    <p> Amount Due: $@tuition</p>
+</div>
+
