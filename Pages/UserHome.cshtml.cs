@@ -206,7 +206,18 @@ namespace LMS.Pages
         /// </summary>
         private void OrderAssignments()
         {
-            //Order assignment dates
+            DateTime currentDateTime = DateTime.Now;
+
+            //Remove past assignments
+            for (int i = 0; i < AssignmentList.Count; i++)
+            {
+                if (AssignmentList[i].Due < currentDateTime)
+                {
+                    AssignmentList.RemoveAt(i);
+                }
+            }
+
+            //Order assignments by date
             AssignmentList = AssignmentList.OrderBy(a => a.Due).ToList();
             //Select top five assignments
             if (AssignmentList.Count > 5)
