@@ -29,6 +29,7 @@ namespace LMS.Pages
         public IList<Course> CourseList { get; set; }
 
         public List<Assignment> AssignmentList { get; set; }
+        public List<Assignment> Assignments { get; set; }
 
         public List<string> CourseInfo { get; set; }
 
@@ -72,6 +73,21 @@ namespace LMS.Pages
                                       };
 
                         CourseList = await courses.ToListAsync();
+
+                        var assignments = from c in _context.Course
+                                      join d in _context.Department on c.Department equals d.ID.ToString()
+                                      join a in _context.Assignment on c.ID equals a.CourseID
+                                      where c.InstructorID == UserID
+                                      select new Assignment{
+                                          ID = a.ID,
+                                          Title = a.Title,
+                                          Points = a.Points,
+                                          Description = a.Description,
+                                          Due = a.Due,
+                                          SubmissionType = a.SubmissionType,
+                                          CourseID = c.ID
+                                      };
+                        Assignments = await assignments.ToListAsync();
 
                         /*** Populate instructor to-do list ***/
 
@@ -123,6 +139,22 @@ namespace LMS.Pages
                                       };
 
                         CourseList = await courses.ToListAsync();
+
+                        var assignments = from c in _context.Course
+                                      join d in _context.Department on c.Department equals d.ID.ToString()
+                                      join r in _context.Registration on c.ID equals r.Course
+                                      join a in _context.Assignment on c.ID equals a.CourseID
+                                      where r.Student == UserID
+                                      select new Assignment{
+                                          ID = a.ID,
+                                          Title = a.Title,
+                                          Points = a.Points,
+                                          Description = a.Description,
+                                          Due = a.Due,
+                                          SubmissionType = a.SubmissionType,
+                                          CourseID = c.ID
+                                      };
+                        Assignments = await assignments.ToListAsync();
 
                         /*** Populate student to-do list ***/
 
