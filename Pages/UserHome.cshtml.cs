@@ -224,30 +224,41 @@ namespace LMS.Pages
         {
             CourseInfo = new List<string>();
 
-            
+            string info = null;
+
+            //Pulls course number and department to diplay in to do list
             foreach (Assignment assignment in AssignmentList)
             {
-                string info = null;
                 foreach (Course course in courseRecords)
                 {
-                    Department deptRecord = _context.Department.Where(d => d.ID.ToString() == course.Department).SingleOrDefault();
-                    info = deptRecord.Code;
+                    if (assignment.CourseID == course.ID)
+                    {
+                        Department deptRecord = _context.Department.Where(d => d.ID.ToString() == course.Department).FirstOrDefault();
+                        info = deptRecord.Code;
+                        info += " " + course.Number;
+                    }
                 }
-
-                Course courseRecord = _context.Course.Where(c => c.ID == assignment.CourseID).SingleOrDefault();
-
-                info += " " + courseRecord.Number;
-
                 CourseInfo.Add(info);
             }
         }
 
         /// <summary>
-        /// Orders a list or assignments by due date
+        /// Orders a list of assignments by due date
         /// </summary>
         private void OrderAssignments()
         {
-            //Order assignment dates
+            DateTime currentDateTime = DateTime.Now;
+
+            //Remove past assignments
+            for (int i = 0; i < AssignmentList.Count; i++)
+            {
+                if (AssignmentList[i].Due < currentDateTime)
+                {
+                    AssignmentList.RemoveAt(i);
+                }
+            }
+
+            //Order assignments by date
             AssignmentList = AssignmentList.OrderBy(a => a.Due).ToList();
             //Select top five assignments
             if (AssignmentList.Count > 5)
