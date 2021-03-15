@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using LMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections;
 
 namespace LMS.Pages
 {
@@ -27,22 +28,28 @@ namespace LMS.Pages
 
         public IList<Course> CourseList { get; set; }
 
+        public List<Assignment> AssignmentList { get; set; }
+
+        public List<string> CourseInfo { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             if (HttpContext != null)
             {
                 // Grab the ID of the user who logged in
                 UserID = (int)HttpContext.Session.GetInt32("userID");
+                User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+
                 if (UserID <= 0)
                 {
                     return new RedirectToPageResult("/Login");
                 }
                 else
                 {
-                    User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-
                     //Stores boolean string for whether the user is an instructor or student
                     string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+                    /*** Populate instructor cards ***/
 
                     //Pulls data for cards
                     if (IsInstructor == "True")  //User is an instructor
@@ -63,11 +70,41 @@ namespace LMS.Pages
                                           Time = c.Time,
                                           Department = d.Code
                                       };
-                       
+
                         CourseList = await courses.ToListAsync();
 
-                    } else  //User is a student
+                        /*** Populate instructor to-do list ***/
+
+                        List<Assignment> assignmentRecords;
+
+                        List<Course> courseRecords;
+
+                        AssignmentList = new List<Assignment>();
+
+                        //Pulls records from db
+                        courseRecords = _context.Course.Where(c => c.InstructorID == UserID).ToList();
+                        assignmentRecords = _context.Assignment.ToList();
+
+                        //Finds assignments for instructor courses
+                        foreach (Course course in courseRecords)
+                        {
+                            foreach (Assignment assignment in assignmentRecords)
+                            {
+                                if (course.ID == assignment.CourseID)
+                                {
+                                    AssignmentList.Add(assignment);
+                                }
+                            }
+                        }
+
+                        OrderAssignments();
+
+                        RetrieveCourseInformation(courseRecords);
+                    }
+                    else  //User is a student
                     {
+                        /*** Populate student cards ***/
+
                         var courses = from c in _context.Course
                                       join d in _context.Department on c.Department equals d.ID.ToString()
                                       join r in _context.Registration on c.ID equals r.Course
@@ -85,9 +122,43 @@ namespace LMS.Pages
                                           Department = d.Code
                                       };
 
-                         CourseList = await courses.ToListAsync();
-                    }
+                        CourseList = await courses.ToListAsync();
 
+                        /*** Populate student to-do list ***/
+
+                        List<Assignment> assignmentRecords;
+
+                        List<Registration> registrationRecords;
+
+                        AssignmentList = new List<Assignment>();
+
+                        //Pulls records from db
+                        registrationRecords = _context.Registration.Where(r => r.Student == UserID).ToList();
+                        assignmentRecords = _context.Assignment.ToList();
+
+                        //Finds assignments for student
+                        foreach (LMS.Models.Registration record in registrationRecords)
+                        {
+                            if (record.Student == UserID)  //Student is enrolled in course
+                            {
+                                foreach (Assignment assignment in assignmentRecords)
+                                {
+                                    if (assignment.CourseID == record.Course) //Assignment is assigned to course
+                                    {
+                                        AssignmentList.Add(assignment);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        OrderAssignments();
+
+                        List<Course> courseRecords;
+                        courseRecords = _context.Course.ToList();
+
+                        RetrieveCourseInformation(courseRecords);
+                    }
                     return Page();
                 }
             }
@@ -102,6 +173,46 @@ namespace LMS.Pages
             HttpContext.Session.SetInt32("currCourse", course);
 
             return new RedirectToPageResult("./Courses/Assignments/Index");
+        }
+
+        /// <summary>
+        /// Pulls course department code and number to display in to-do list
+        /// </summary>
+        /// <param name="courseRecords"></param>
+        private void RetrieveCourseInformation(List<Course> courseRecords)
+        {
+            CourseInfo = new List<string>();
+
+            
+            foreach (Assignment assignment in AssignmentList)
+            {
+                string info = null;
+                foreach (Course course in courseRecords)
+                {
+                    Department deptRecord = _context.Department.Where(d => d.ID.ToString() == course.Department).SingleOrDefault();
+                    info = deptRecord.Code;
+                }
+
+                Course courseRecord = _context.Course.Where(c => c.ID == assignment.CourseID).SingleOrDefault();
+
+                info += " " + courseRecord.Number;
+
+                CourseInfo.Add(info);
+            }
+        }
+
+        /// <summary>
+        /// Orders a list or assignments by due date
+        /// </summary>
+        private void OrderAssignments()
+        {
+            //Order assignment dates
+            AssignmentList = AssignmentList.OrderBy(a => a.Due).ToList();
+            //Select top five assignments
+            if (AssignmentList.Count > 5)
+            {
+                AssignmentList.RemoveRange(5, (AssignmentList.Count - 5));
+            }
         }
     }
 }
