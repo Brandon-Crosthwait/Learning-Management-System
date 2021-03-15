@@ -183,20 +183,20 @@ namespace LMS.Pages
         {
             CourseInfo = new List<string>();
 
-            
+            string info = null;
+
+            //Pulls course number and department to diplay in to do list
             foreach (Assignment assignment in AssignmentList)
             {
-                string info = null;
                 foreach (Course course in courseRecords)
                 {
-                    Department deptRecord = _context.Department.Where(d => d.ID.ToString() == course.Department).SingleOrDefault();
-                    info = deptRecord.Code;
+                    if (assignment.CourseID == course.ID)
+                    {
+                        Department deptRecord = _context.Department.Where(d => d.ID.ToString() == course.Department).FirstOrDefault();
+                        info = deptRecord.Code;
+                        info += " " + course.Number;
+                    }
                 }
-
-                Course courseRecord = _context.Course.Where(c => c.ID == assignment.CourseID).SingleOrDefault();
-
-                info += " " + courseRecord.Number;
-
                 CourseInfo.Add(info);
             }
         }
