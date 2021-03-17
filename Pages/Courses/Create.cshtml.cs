@@ -80,10 +80,6 @@ namespace LMS.Pages.Courses
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
 
             UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
