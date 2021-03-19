@@ -54,9 +54,9 @@
     <ul class="todo-list">
         @for (int i = 0; i < Model.AssignmentList.Count; i++)
         {
-            <li>
-                <p><i class="fa fa-pencil-square-o" aria-hidden="true">&emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
-                    <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)</i></p>
+            <li class="link" onclick="window.location='Courses/Assignments'" name="assignment" value="@Model.AssignmentList[i].ID"><span>
+                <i class="fa fa-pencil-square-o" aria-hidden="true">&emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
+                    <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)</i></span>
             </li>
         }
     </ul>

@@ -10,8 +10,13 @@
 
 <p>
     <h2>Assignments</h2>
-    <a asp-page="Create">Add Assignment</a>
 </p>
+@if (Model.boolInstructor)
+{
+    <a asp-page="Create">Add Assignment</a>
+}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -28,25 +33,28 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Assignment)
-{
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.Due)*@
-                @item.Due.ToString("dddd, MM/dd h:mm tt")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmissionType)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> @*|
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Assignment)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Due)*@
+                    @item.Due.ToString("dddd, MM/dd h:mm tt")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubmissionType)
+                </td>
+                <td>
+                    @if (Model.boolInstructor)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
+                    }
+                    @*|<a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

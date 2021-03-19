@@ -28,8 +28,22 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         [BindProperty]
         public Department Department { get; set; }
 
+        public bool boolInstructor {get; set; }
+
+
         public async Task OnGetAsync()
         {
+            bool sessionInstructor = bool.Parse(HttpContext.Session.GetString("isInstructorSession"));
+
+            if (sessionInstructor == true)
+            {
+                boolInstructor = true;
+            } 
+            else
+            {
+                boolInstructor = false;
+            }
+
             // Retrieve the selected Course to display proper course info
             int courseID = (int)HttpContext.Session.GetInt32("currCourse");
             Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);

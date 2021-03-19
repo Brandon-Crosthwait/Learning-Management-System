@@ -162,6 +162,15 @@ body {
     width: auto;
 }
 
+li.link span {
+text-decoration: none;
+cursor: pointer;
+}
+
+li.link span:hover {
+color: blue;
+}
+
 /* Login page */
 .loginpage {
     text-align: center;

@@ -23,5 +23,7 @@ namespace LMS.Data
         public DbSet<LMS.Models.Registration> Registration { get; set; }
 
         public DbSet<LMS.Models.Assignment> Assignment { get; set; }
+
+        public DbSet<LMS.Models.Submission> Submission { get; set; }
     }
 }

@@ -200,20 +200,24 @@ namespace LMS.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostAsync(int course)
+        public async Task<IActionResult> OnPostAsync(int course, int assignment)
         {
-            HttpContext.Session.SetInt32("currCourse", course);
-
             string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
 
-            if (IsInstructor == "True")
+            if (course != 0)
             {
+                HttpContext.Session.SetInt32("currCourse", course);
+
                 return new RedirectToPageResult("./Courses/Assignments/Index");
             }
-            else
+
+            if (assignment != 0)
             {
-                return new RedirectToPageResult("/UserHome");
+                HttpContext.Session.SetInt32("currAssignment", assignment);
+
+                return new RedirectToPageResult("./Courses/Assignments/Index");
             }
+            return new RedirectToPageResult("/UserHome");
         }
 
         /// <summary>
