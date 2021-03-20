@@ -51,13 +51,11 @@
 
 <div id="todo">
     <h3 class="todo-title">To Do</h3>
-    @*<ul class="todo-list">*@
         @for (int i = 0; i < Model.AssignmentList.Count; i++)
         {
             <form asp-page-handler="view" method="post">
                 <input type="hidden" name="assignment" value="@Model.AssignmentList[i].ID" />
-                @*<li class="link" onclick="window.location='Submission/Create'" name="assignment" value="@Model.AssignmentList[i].ID">*@
-                <button type="submit" class="btn btn-link text-secondary">
+                <button type="submit" class="btn btn-link text-left text-secondary">
                     <span>
                         <i class="fa fa-pencil-square-o" aria-hidden="true">
                             &emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
@@ -65,10 +63,8 @@
                         </i>
                     </span>
                 </button>
-                    @*</li>*@
             </form>
         }
-    @*</ul>*@
  </div>
 
 

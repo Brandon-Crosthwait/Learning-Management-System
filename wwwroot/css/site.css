@@ -134,30 +134,6 @@ body {
 }
 
 /*To Do List*/
-
-.btn-todo {
-    background: transparent;
-    box-shadow: 0px 0px 0px transparent;
-    border: 0px solid transparent;
-    text-shadow: 0px 0px 0px transparent;
-}
-
-    .btn-todo:hover {
-        background: transparent;
-        box-shadow: 0px 0px 0px transparent;
-        border: 0px solid transparent;
-        text-shadow: 0px 0px 0px transparent;
-    }
-
-    .btn-todo:active {
-        outline: none;
-        border: none;
-    }
-
-    .btn-todo:focus {
-        outline: 0;
-    }
-
 #todo {
     width: 250px;
     text-align: left;
