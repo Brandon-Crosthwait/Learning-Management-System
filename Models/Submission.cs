@@ -17,6 +17,6 @@ namespace LMS.Models
         public int StudentID { get; set; }
 
         [Required]
-        public string SubmissionFile { get; set; }
+        public string Content { get; set; }
     }
 }
