@@ -215,7 +215,7 @@ namespace LMS.Pages
             {
                 HttpContext.Session.SetInt32("currAssignment", assignment);
 
-                return new RedirectToPageResult("./Courses/Assignments/Index");
+                return new RedirectToPageResult("./Submission/Create");
             }
             return new RedirectToPageResult("/UserHome");
         }

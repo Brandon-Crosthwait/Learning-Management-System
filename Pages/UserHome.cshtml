@@ -51,15 +51,24 @@
 
 <div id="todo">
     <h3 class="todo-title">To Do</h3>
-    <ul class="todo-list">
+    @*<ul class="todo-list">*@
         @for (int i = 0; i < Model.AssignmentList.Count; i++)
         {
-            <li class="link" onclick="window.location='Courses/Assignments'" name="assignment" value="@Model.AssignmentList[i].ID"><span>
-                <i class="fa fa-pencil-square-o" aria-hidden="true">&emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
-                    <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)</i></span>
-            </li>
+            <form asp-page-handler="view" method="post">
+                <input type="hidden" name="assignment" value="@Model.AssignmentList[i].ID" />
+                @*<li class="link" onclick="window.location='Submission/Create'" name="assignment" value="@Model.AssignmentList[i].ID">*@
+                <button type="submit" class="btn btn-link text-secondary">
+                    <span>
+                        <i class="fa fa-pencil-square-o" aria-hidden="true">
+                            &emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
+                            <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)
+                        </i>
+                    </span>
+                </button>
+                    @*</li>*@
+            </form>
         }
-    </ul>
+    @*</ul>*@
  </div>
 
 
@@ -73,8 +82,10 @@
       height: 225,
       nextDayThreshold: '24:00:00',
       events: [
-          @{var lastItem = Model.Assignments.Last(); }
-          @foreach (var item in Model.Assignments) {
+          @{if (Model.Assignments.Count > 0)
+              {
+                  var lastItem = Model.Assignments.Last();
+                            @foreach (var item in Model.Assignments) {
                     @:{
                         @: title: ('@item.Title.ToString()'),
                         @: start: ('@item.Due.ToString("yyyy-MM-ddTHH\\:mm")'),
@@ -87,6 +98,9 @@
                         @:
                     }
                 }
+              }
+               }
+
             ]
     });
     calendar.render();
