@@ -34,9 +34,17 @@ namespace LMS.Pages.Submission
         public Department Department { get; set; }
 
         [BindProperty]
+        public LMS.Models.Submission Submission { get; set; }
+
+        [BindProperty]
         public int AssignmentID { get; set; }
+
         [BindProperty]
         public int StudentID { get; set; }
+
+        [BindProperty]
+        public bool Submitted { get; set; }
+
         [BindProperty]
         public IFormFile File { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
@@ -45,11 +53,34 @@ namespace LMS.Pages.Submission
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
             AssignmentID = (int)HttpContext.Session.GetInt32("currAssignment");
+
+            Student = _context.User.Where(u => u.ID == StudentID).FirstOrDefault();
+            Assignment = _context.Assignment.Where(u => u.ID == AssignmentID).FirstOrDefault();
+            Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
+            Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
+
+            List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
+            SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
+
+            Submitted = false;
+
+            //Finds assignments for instructor courses
+            foreach (LMS.Models.Submission submission in SubmissionsByAssignment)
+            {
+                if (submission.StudentID == StudentID)
+                {
+                    Submitted = true;
+                    break;
+                }
+                else
+                {
+                    Submitted = false;
+                }
+            }
+
             return Page();
         }
 
-        [BindProperty]
-        public LMS.Models.Submission Submission { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -62,6 +93,11 @@ namespace LMS.Pages.Submission
             Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
             Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
 
+            // Assign the student and assignment to the submission record
+            Submission.StudentID = StudentID;
+            Submission.AssignmentID = AssignmentID;
+
+            // Assign the file to the submission record
             if (File != null)
             {
                 if (Submission.Content != null)
@@ -71,12 +107,16 @@ namespace LMS.Pages.Submission
                     System.IO.File.Delete(filePath);
                 }
                 Submission.Content = ProcessUploadedFile(Student, Course, Department);
+
+                _context.Submission.Add(Submission);
+                await _context.SaveChangesAsync();
+
+                return RedirectToPage("./Index");
             }
-
-            _context.Submission.Add(Submission);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            else
+            {
+                return Page();
+            }
         }
 
         private string ProcessUploadedFile(User Student, Course Course, Department Department)
