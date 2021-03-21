@@ -4,7 +4,7 @@
     ViewData["Title"] = "User Home";
 }
 
-<div class="user-title">
+<div class="user-title text-center">
     <h1>Welcome @Model.User.FirstName</h1>
 </div>
 
@@ -56,7 +56,7 @@
             <form asp-page-handler="view" method="post">
                 <input type="hidden" name="assignment" value="@Model.AssignmentList[i].ID" />
                 <button type="submit" class="btn btn-link text-left text-secondary">
-                    <span>
+                    <span class="todo-item">
                         <i class="fa fa-pencil-square-o" aria-hidden="true">
                             &emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
                             <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)
