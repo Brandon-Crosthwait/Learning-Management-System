@@ -52,5 +52,12 @@ namespace LMS.Pages.Profile
             }
         }
 
+        public IActionResult OnPost()
+        {
+            HttpContext.Session.Clear();
+            return new RedirectToPageResult("../Index");
+        }
+
     }
+
 }

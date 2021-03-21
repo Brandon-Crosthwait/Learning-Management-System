@@ -35,6 +35,7 @@ namespace LMS.Pages.Registrations
 
         public IList<Registration> RegList { get; set; }
         public string registerButton = "Register";
+        public string buttonStyle = "btn-primary";
 
         [BindProperty]
         public int UserID { get; set; }

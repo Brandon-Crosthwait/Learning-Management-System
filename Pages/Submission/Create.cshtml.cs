@@ -46,6 +46,12 @@ namespace LMS.Pages.Submission
         public bool Submitted { get; set; }
 
         [BindProperty]
+        public bool FileUpload { get; set; }
+
+        [BindProperty]
+        public string Content { get; set; }
+
+        [BindProperty]
         public IFormFile File { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -63,6 +69,16 @@ namespace LMS.Pages.Submission
             SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
 
             Submitted = false;
+
+            // Check for submission type to display proper form
+            if (Assignment.SubmissionType == "File Upload")
+            {
+                FileUpload = true;
+            }
+            else
+            {
+                FileUpload = false;
+            }
 
             //Finds assignments for instructor courses
             foreach (LMS.Models.Submission submission in SubmissionsByAssignment)
@@ -97,25 +113,36 @@ namespace LMS.Pages.Submission
             Submission.StudentID = StudentID;
             Submission.AssignmentID = AssignmentID;
 
-            // Assign the file to the submission record
-            if (File != null)
+            if (Assignment.SubmissionType == "File Upload")
             {
-                if (Submission.Content != null)
+                // Assign the file to the submission record
+                if (File != null)
                 {
-                    string filePath = Path.Combine(webHostEnvironment.WebRootPath,
-                    "StudentSubmissions", Submission.Content);
-                    System.IO.File.Delete(filePath);
-                }
-                Submission.Content = ProcessUploadedFile(Student, Course, Department);
+                    if (Submission.Content != null)
+                    {
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
+                        "StudentSubmissions", Submission.Content);
+                        System.IO.File.Delete(filePath);
+                    }
+                    Submission.Content = ProcessUploadedFile(Student, Course, Department);
 
+                    _context.Submission.Add(Submission);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    return Page();
+                }
+            }
+            else
+            {
+                Submission.Content = Content;
                 _context.Submission.Add(Submission);
                 await _context.SaveChangesAsync();
 
                 return RedirectToPage("./Index");
-            }
-            else
-            {
-                return Page();
             }
         }
 

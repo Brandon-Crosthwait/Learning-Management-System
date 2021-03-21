@@ -62,16 +62,18 @@
                     if (reg.Course == item.ID)
                     {
                         Model.registerButton = ("Unregister");
+                        Model.buttonStyle = "btn-danger";
                         break;
                     }
                     else
                     {
                         Model.registerButton = ("Register");
+                        Model.buttonStyle = "btn-primary";
                     }
                 }
                 <td>
                     <form asp-page-handler="view" method="post">
-                        <button class="btn btn-default">@Model.registerButton</button>
+                        <button class="btn @Model.buttonStyle">@Model.registerButton</button>
                         <input type="hidden" name="course" value="@item.ID" />
                     </form>
                 </td>
