@@ -3,14 +3,25 @@
 
 @{ 
     ViewData["Title"] = "Index";
-    var tuition = 0.00;
-    foreach (var item in Model.CourseList)
-    {
-        tuition += item.CreditHours * 100.00;
-    }
+    int stripeamount = @Model.Amount * 100;
 }
-<div class="col-md-9">
-    <p> Tuition</p>
-    <p> Amount Due: $@tuition</p>
-</div>
 
+<form method="POST" id = "Payment">
+  <article>
+    <div>
+      <label><h1>Amount Due: $@Model.cost<h1></label>
+    </div>
+    <h4>
+      <label asp-for="@Model.Amount" class="control-label">Payment Amount: <input asp-for="@Model.Amount" class="form-control"/> </label>
+    </h4>
+    <span asp-validation-for="@Model.Amount" class="text-danger"></span>
+  </article>
+  <script 
+    src="//checkout.stripe.com/checkout.js" 
+    class="stripe-button" 
+    data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" 
+    data-locale="auto" 
+    data-description="Tuition Due"
+    data-email="@Model.User.Email">
+  </script>
+</form>

@@ -62,5 +62,7 @@ namespace LMS.Models
         public string Link1 { get; set; }
         public string Link2 { get; set; }
         public string Link3 { get; set; }
+
+        public int Payment { get; set; }
     }
 }
