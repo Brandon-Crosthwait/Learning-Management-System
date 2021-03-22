@@ -9,11 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Stripe;
+using Stripe.Checkout;
+
 
 namespace LMS.Pages.Tuition
 {
     public class IndexModel : PageModel
     {
+        
         private readonly LMS.Data.LMSContext _context;
 
         public IndexModel(LMS.Data.LMSContext context)
@@ -47,5 +53,35 @@ namespace LMS.Pages.Tuition
 
             CourseList = await courses.ToListAsync();
         }
+        
+            public IActionResult Charge(string  stripeEmail, string stripeToken)
+            {
+                var customers = new CustomerService();
+                var charges = new ChargeService();
+
+                var customer = customers.Create(new CustomerCreateOptions {
+                    Email = stripeEmail,
+                    Source = stripeToken
+                });
+
+                var charge = charges.Create(new ChargeCreateOptions {
+                    Amount = 500,
+                    Description = "Sample Charge",
+                    Currency = "usd",
+                    Customer = customer.Id
+                });
+
+                return Page();
+            }
+            
+            public IActionResult Index()
+            {
+                return Page();
+            }
+
+            public IActionResult Error()
+            {
+                return Page();
+            }
     }
 }
