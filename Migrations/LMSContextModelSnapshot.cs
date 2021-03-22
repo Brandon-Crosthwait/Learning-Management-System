@@ -227,6 +227,9 @@ namespace LMS.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("Payment")
+                        .HasColumnType("int");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
@@ -244,9 +247,6 @@ namespace LMS.Migrations
                     b.Property<string>("Zip")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("payment")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LMS.Data.Migrations
+namespace LMS.Migrations
 {
     [DbContext(typeof(LMSContext))]
-    [Migration("20210322171929_UserPayment")]
+    [Migration("20210322182235_UserPayment")]
     partial class UserPayment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -229,6 +229,9 @@ namespace LMS.Data.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("Payment")
+                        .HasColumnType("int");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
@@ -246,9 +249,6 @@ namespace LMS.Data.Migrations
                     b.Property<string>("Zip")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("payment")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

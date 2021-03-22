@@ -63,14 +63,14 @@ namespace LMS.Pages.Tuition
             {
                 cost += item.CreditHours * 100;
             }
-            cost = cost - User.payment;
+            cost = cost - User.Payment;
         }
         
             public IActionResult OnPostAsync(string stripeEmail, string stripeToken)
             {
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                User.payment = cost;
+                User.Payment = cost;
                 
                 var customers = new CustomerService();
 
