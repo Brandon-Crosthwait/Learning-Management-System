@@ -33,6 +33,8 @@ namespace LMS.Pages.Tuition
         public int UserID { get; set; }
         public User User { get; set; }
 
+        public int cost {get;set;}
+
         public async Task OnGetAsync()
         {
             UserID = (int)HttpContext.Session.GetInt32("userID");
@@ -55,36 +57,47 @@ namespace LMS.Pages.Tuition
                           };
 
             CourseList = await courses.ToListAsync();
+
+            foreach (var item in CourseList)
+            {
+                cost += item.CreditHours * 100;
+            }
+            cost -= User.payment;
         }
         
-            public IActionResult Charge(string  stripeEmail, string stripeToken)
+            public IActionResult OnPostAsync(string stripeEmail, string stripeToken)
             {
+                UserID = (int)HttpContext.Session.GetInt32("userID");
+                User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+                
                 var customers = new CustomerService();
-                var charges = new ChargeService();
 
                 var customer = customers.Create(new CustomerCreateOptions {
                     Email = stripeEmail,
                     Source = stripeToken
                 });
 
-                var charge = charges.Create(new ChargeCreateOptions {
-                    Amount = 500,
-                    Description = "Sample Charge",
+                var options = new ChargeCreateOptions {
+                    Amount = cost,
                     Currency = "usd",
+                    Source = "tok_visa",
+                    Description = "Tuition Payment",
                     Customer = customer.Id
-                });
+                };
 
-                return Page();
+                User.payment = cost;
+                
+                return RedirectToPage("./Index");
             }
             
             public IActionResult Index()
             {
-                return Page();
+                return RedirectToPage("./Index");
             }
 
             public IActionResult Error()
             {
-                return Page();
+                return RedirectToPage("./Index");
             }
     }
 }

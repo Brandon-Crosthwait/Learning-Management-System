@@ -3,18 +3,12 @@
 
 @{ 
     ViewData["Title"] = "Index";
-    var tuition = 0.00;
-    foreach (var item in Model.CourseList)
-    {
-        tuition += item.CreditHours * 100;
-    }
-    tuition -= Model.User.payment;
 }
 
-<form action="/Home/Charge" method="POST">
+<form method="POST">
   <article>
-    <label>Amount Due: $@tuition</label>
+    <label>Amount Due: $@Model.cost</label>
   </article>
-  <script src="//checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" data-locale="auto" data-description="Tuition Due" data-amount="(@tuition*100)">
+  <script src="//checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" data-locale="auto" data-description="Tuition Due" data-amount="(@Model.cost)">
   </script>
 </form>
