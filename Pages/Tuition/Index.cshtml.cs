@@ -31,10 +31,13 @@ namespace LMS.Pages.Tuition
 
         [BindProperty]
         public int UserID { get; set; }
+        public User User { get; set; }
 
         public async Task OnGetAsync()
         {
             UserID = (int)HttpContext.Session.GetInt32("userID");
+            User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+
             var courses = from c in _context.Course
                           join r in _context.Registration on c.ID equals r.Course
                           where r.Student == UserID

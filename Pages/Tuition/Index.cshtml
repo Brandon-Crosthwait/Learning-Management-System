@@ -8,6 +8,7 @@
     {
         tuition += item.CreditHours * 100;
     }
+    tuition -= Model.User.payment;
 }
 
 <form action="/Home/Charge" method="POST">
