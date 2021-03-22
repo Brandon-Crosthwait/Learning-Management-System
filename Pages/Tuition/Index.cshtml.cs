@@ -24,7 +24,7 @@ namespace LMS.Pages.Tuition
 
         public IndexModel(LMS.Data.LMSContext context)
         {
-            _context = context;
+           this._context = context;
         }
 
         public IList<Course> CourseList { get; set; }
@@ -65,12 +65,13 @@ namespace LMS.Pages.Tuition
             }
             cost = cost - User.Payment;
         }
-        
-            public IActionResult OnPostAsync(string stripeEmail, string stripeToken)
+
+            public async Task<IActionResult> OnPostAsync(string stripeEmail, string stripeToken)
             {
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
                 User.Payment = cost;
+                await _context.SaveChangesAsync();
                 
                 var customers = new CustomerService();
 
@@ -87,16 +88,6 @@ namespace LMS.Pages.Tuition
                     Customer = customer.Id
                 };
                 
-                return RedirectToPage("./Index");
-            }
-            
-            public IActionResult Index()
-            {
-                return RedirectToPage("./Index");
-            }
-
-            public IActionResult Error()
-            {
                 return RedirectToPage("./Index");
             }
     }
