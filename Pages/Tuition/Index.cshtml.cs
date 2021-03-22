@@ -33,13 +33,17 @@ namespace LMS.Pages.Tuition
         public int UserID { get; set; }
         public User User { get; set; }
 
+        [BindProperty]
+        public int Amount { get; set; }
+
         public int cost {get;set;}
 
         public async Task OnGetAsync()
         {
             UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-            
+
+            Amount = 100;
 
             var courses = from c in _context.Course
                           join r in _context.Registration on c.ID equals r.Course
@@ -70,9 +74,9 @@ namespace LMS.Pages.Tuition
             {
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                User.Payment = cost;
+                User.Payment = Amount;
                 await _context.SaveChangesAsync();
-                
+
                 var customers = new CustomerService();
 
                 var customer = customers.Create(new CustomerCreateOptions {
@@ -81,7 +85,7 @@ namespace LMS.Pages.Tuition
                 });
 
                 var options = new ChargeCreateOptions {
-                    Amount = cost,
+                    Amount = Amount,
                     Currency = "usd",
                     Source = "tok_visa",
                     Description = "Tuition Payment",

@@ -3,20 +3,22 @@
 
 @{ 
     ViewData["Title"] = "Index";
-    int displaycost = Model.cost * 100;
 }
 
 <form method="POST">
   <article>
-    @Model.User.Payment
-    <label>Amount Due: $@Model.cost</label>
+    <div>
+      <label>Amount Due: $@Model.Cost</label>
+    </div>
+    <label asp-for="@Model.Amount" class="control-label">Payment Amount: </label>
+    <input asp-for="@Model.Amount" class="form-control" />
+    <span asp-validation-for="@Model.Amount" class="text-danger"></span>
   </article>
   <script 
     src="//checkout.stripe.com/checkout.js" 
     class="stripe-button" 
     data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" 
     data-locale="auto" 
-    data-description="Tuition Due" 
-    data-amount="@displaycost">
+    data-description="Tuition Due">
   </script>
 </form>
