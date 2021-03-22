@@ -57,5 +57,18 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             // Display the list of Assignments for the selected Course
             Assignment = await _context.Assignment.Where(x => x.CourseID == courseID).ToListAsync();
         }
+
+        public async Task<IActionResult> OnPostAsync(int assignment)
+        {
+            string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+            if (assignment != 0)
+            {
+                HttpContext.Session.SetInt32("currAssignment", assignment);
+
+                return new RedirectToPageResult("/Submission/Create");
+            }
+            return new RedirectToPageResult("/Assignments");
+        }
     }
 }
