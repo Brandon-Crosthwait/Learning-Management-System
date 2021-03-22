@@ -44,7 +44,16 @@
                     @item.Due.ToString("dddd, MM/dd h:mm tt")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubmissionType)
+                    <form asp-page-handler="view" method="post">
+                        <input type="hidden" name="assignment" value="@item.ID" />
+                        <button type="submit" class="btn btn-link text-left text-secondary:hover">
+                            <span>
+                                <i class="SubmissionTypeLink">
+                                    @Html.DisplayFor(modelItem => item.SubmissionType)
+                                </i>
+                            </span>
+                        </button>
+                    </form>
                 </td>
                 <td>
                     @if (Model.boolInstructor)
@@ -52,8 +61,8 @@
                         <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
                     }
                     @*|<a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
-                </td>
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
+                    </td>
             </tr>
         }
     </tbody>
