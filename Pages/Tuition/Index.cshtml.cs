@@ -39,6 +39,7 @@ namespace LMS.Pages.Tuition
         {
             UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+            
 
             var courses = from c in _context.Course
                           join r in _context.Registration on c.ID equals r.Course
@@ -62,13 +63,14 @@ namespace LMS.Pages.Tuition
             {
                 cost += item.CreditHours * 100;
             }
-            cost -= User.payment;
+            cost = cost - User.payment;
         }
         
             public IActionResult OnPostAsync(string stripeEmail, string stripeToken)
             {
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
+                User.payment = cost;
                 
                 var customers = new CustomerService();
 
@@ -84,8 +86,6 @@ namespace LMS.Pages.Tuition
                     Description = "Tuition Payment",
                     Customer = customer.Id
                 };
-
-                User.payment = cost;
                 
                 return RedirectToPage("./Index");
             }
