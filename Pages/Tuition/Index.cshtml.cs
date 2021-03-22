@@ -74,7 +74,7 @@ namespace LMS.Pages.Tuition
             {
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                User.Payment = Amount;
+                User.Payment = User.Payment + Amount;
                 await _context.SaveChangesAsync();
 
                 var customers = new CustomerService();

@@ -299,3 +299,17 @@ color: blue;
     width: 80vw;
   }
 }
+
+#Payment {
+    display: inline-block;
+    margin-left: 300px;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-family: 'courier new';
+    font-style: normal;
+    font-weight: bold;
+  }
+
+.text-danger{
+  display: block;
+}
