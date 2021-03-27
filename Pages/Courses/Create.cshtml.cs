@@ -18,8 +18,7 @@ namespace LMS.Pages.Courses
         
         public CreateModel(LMS.Data.LMSContext context)
         {
-            _context = context;
-            this.UserID = (int)HttpContext.Session.GetInt32("userID");
+            _context = context;            
         }
 
         public int UserID { get; set; }
@@ -56,6 +55,7 @@ namespace LMS.Pages.Courses
 
         public IActionResult OnGet()
         {
+            this.UserID = (int)HttpContext.Session.GetInt32("userID");
             if (HttpContext != null)
             {
                 if (UserID <= 0)
@@ -80,7 +80,7 @@ namespace LMS.Pages.Courses
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-
+            this.UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
             if (Monday)
