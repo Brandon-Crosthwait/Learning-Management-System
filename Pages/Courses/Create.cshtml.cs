@@ -15,10 +15,11 @@ namespace LMS.Pages.Courses
     public class CreateModel : PageModel
     {
         private readonly LMS.Data.LMSContext _context;
-
+        
         public CreateModel(LMS.Data.LMSContext context)
         {
             _context = context;
+            this.UserID = (int)HttpContext.Session.GetInt32("userID");
         }
 
         public int UserID { get; set; }
@@ -57,7 +58,6 @@ namespace LMS.Pages.Courses
         {
             if (HttpContext != null)
             {
-                UserID = (int)HttpContext.Session.GetInt32("userID");
                 if (UserID <= 0)
                 {
                     return new RedirectToPageResult("/Login");
@@ -81,7 +81,6 @@ namespace LMS.Pages.Courses
         public async Task<IActionResult> OnPostAsync()
         {
 
-            UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
             if (Monday)
