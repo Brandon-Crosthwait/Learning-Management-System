@@ -215,8 +215,16 @@ namespace LMS.Pages
             {
                 HttpContext.Session.SetInt32("currAssignment", assignment);
 
-                return new RedirectToPageResult("./Submission/Create");
+                if (IsInstructor == "False")
+                {
+                    return new RedirectToPageResult("./Submission/Create");
+                }
+                else
+                {
+                    return new RedirectToPageResult("./Submission/Index");
+                }
             }
+
             return new RedirectToPageResult("/UserHome");
         }
 
@@ -259,6 +267,7 @@ namespace LMS.Pages
                 if (AssignmentList[i].Due < currentDateTime)
                 {
                     AssignmentList.RemoveAt(i);
+                    i = -1;
                 }
             }
 
