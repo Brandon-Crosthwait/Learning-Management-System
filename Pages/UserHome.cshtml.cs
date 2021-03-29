@@ -21,17 +21,42 @@ namespace LMS.Pages
             _context = context;
         }
 
+        #region Attributes
+        /// <summary>
+        /// Username of current User
+        /// </summary>
         public string Username;
+
+        /// <summary>
+        /// UserID of current User
+        /// </summary>
         public int UserID;
 
+        /// <summary>
+        /// Instance of a User
+        /// </summary>
         public User User { get; set; }
 
+        /// <summary>
+        /// A list of Course objects
+        /// </summary>
         public IList<Course> CourseList { get; set; }
 
+        /// <summary>
+        /// A list of Assignment objects
+        /// </summary>
         public List<Assignment> AssignmentList { get; set; }
+
+        /// <summary>
+        /// Secondary list of Assignment objects
+        /// </summary>
         public List<Assignment> Assignments { get; set; }
 
+        /// <summary>
+        /// A list of pulled Course information
+        /// </summary>
         public List<string> CourseInfo { get; set; }
+        #endregion
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -204,6 +229,7 @@ namespace LMS.Pages
         {
             string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
 
+            // User clicks on Course card and is sent to Assignments page for that Course
             if (course != 0)
             {
                 HttpContext.Session.SetInt32("currCourse", course);
@@ -211,10 +237,13 @@ namespace LMS.Pages
                 return new RedirectToPageResult("./Courses/Assignments/Index");
             }
 
+            // User clicks on ToDo List item and is sent to the Submission page for that Assignment
             if (assignment != 0)
             {
                 HttpContext.Session.SetInt32("currAssignment", assignment);
 
+                // If Student, the User is sent to Submission/Create
+                // If Instructor, the User is sent to the list of Submissions for Assignment
                 if (IsInstructor == "False")
                 {
                     return new RedirectToPageResult("./Submission/Create");
@@ -238,7 +267,7 @@ namespace LMS.Pages
 
             string info = null;
 
-            //Pulls course number and department to diplay in to do list
+            //Pulls course number and department to display in to do list
             foreach (Assignment assignment in AssignmentList)
             {
                 foreach (Course course in courseRecords)
