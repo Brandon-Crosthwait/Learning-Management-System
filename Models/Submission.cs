@@ -18,5 +18,8 @@ namespace LMS.Models
 
         [Required]
         public string Content { get; set; }
+
+        [Required]
+        public string Grade { get; set; }
     }
 }
