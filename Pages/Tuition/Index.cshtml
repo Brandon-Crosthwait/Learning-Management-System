@@ -3,7 +3,6 @@
 
 @{ 
     ViewData["Title"] = "Index";
-    int stripeamount = @Model.Amount * 100;
 }
 
 <form method="POST" id = "Payment">
@@ -11,17 +10,43 @@
     <div>
       <label><h1>Amount Due: $@Model.cost<h1></label>
     </div>
-    <h4>
-      <label asp-for="@Model.Amount" class="control-label">Payment Amount: <input asp-for="@Model.Amount" class="form-control"/> </label>
-    </h4>
-    <span asp-validation-for="@Model.Amount" class="text-danger"></span>
-  </article>
-  <script 
-    src="//checkout.stripe.com/checkout.js" 
-    class="stripe-button" 
-    data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" 
-    data-locale="auto" 
-    data-description="Tuition Due"
-    data-email="@Model.User.Email">
-  </script>
+  </article> 
+      <div>
+        <label asp-for="@Model.CardNumber" class="cardinfo-label" for="card-number">Card Number:</label>
+        <input asp-for="@Model.CardNumber" class="cardInput" id="card-number" placeholder="1111-2222-3333-4444">
+      </div>
+
+      <div>
+        <label asp-for="@Model.Month" class="cardinfo-label">Date:</label>
+        <input asp-for="@Model.Month" class="cardInput" id="Month" placeholder="MM"/>
+        <input asp-for="@Model.Year" class="cardInput" id="Year" placeholder="YY"/>
+        <label asp-for="@Model.CVV" class="cardinfo-label" id ="cvv-label">CVV:</label>
+        <input asp-for="@Model.CVV" class="cardInput" id="cvv" placeholder="595"/>
+      </div>
+
+      <div>
+        <label asp-for="@Model.Amount" class="cardinfo-label">Amount:</label>
+        <input asp-for="@Model.Amount" class="cardInput" id="Amount"/>
+      </div>
+
+      <div>
+        <input type="submit" value="Send Payment" class="btn-payment" />
+      </div>
 </form>
+
+<script>
+
+</script>
+
+@section Scripts {  
+    <script>
+      $('input[id=card-number]').keypress(function(){
+      var rawNumbers = $(this).val().replace(/-/g,'');
+      var cardLength = rawNumbers.length;
+      if(cardLength !==0 && cardLength <=12 && cardLength % 4 == 0){
+        $(this).val($(this).val()+'-');
+      }
+      });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
