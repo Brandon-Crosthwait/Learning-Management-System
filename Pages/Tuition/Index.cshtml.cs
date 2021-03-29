@@ -80,7 +80,7 @@ namespace LMS.Pages.Tuition
 
             foreach (var item in CourseList)
             {
-                cost = item.CreditHours * 100;
+                cost += item.CreditHours * 100;
             }
             cost = cost - User.Payment;
         }
