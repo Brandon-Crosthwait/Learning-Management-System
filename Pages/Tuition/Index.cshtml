@@ -11,17 +11,28 @@
     <div>
       <label><h1>Amount Due: $@Model.cost<h1></label>
     </div>
-    <h4>
-      <label asp-for="@Model.Amount" class="control-label">Payment Amount: <input asp-for="@Model.Amount" class="form-control"/> </label>
-    </h4>
-    <span asp-validation-for="@Model.Amount" class="text-danger"></span>
-  </article>
-  <script 
-    src="//checkout.stripe.com/checkout.js" 
-    class="stripe-button" 
-    data-key="pk_test_51IXY5HKDFQVp5Jj68Y684M7rGXmBkIrm3LGKIJ7jFyw6MxXyj3tOpkgSOcRvlfNdIN1ZCr7oHrpj0MNl7yYOl3Bx00NudScxDP" 
-    data-locale="auto" 
-    data-description="Tuition Due"
-    data-email="@Model.User.Email">
-  </script>
+  </article> 
+      <div class="cardinfo-card-number">
+      <label class="cardinfo-label" for="card-number">Card Number</label>
+      <div class="input" id="card-number"></div>
+
+      <div class="cardinfo-wrapper">
+        <div class="cardinfo-exp-date">
+        <label class="cardinfo-label" for="expiration-date">Valid Thru</label>
+        <div asp-for="@Model.Expiration" class="input" id="expiration-date"></div>
+      </div>
+
+      <div class="cvv">
+        <label asp-for="@Model.CVV" class="cardinfo-label" for="cvv">CVV</label>
+        <div asp-for="@Model.CVV" class="input" id="cvv"></div>
+      </div>
+      
+      <div>
+        <label asp-for="@Model.Amount" class="control-label">Payment Amount</label>
+        <input asp-for="@Model.Amount" class="input"/>
+      </div>
+
+      <div>
+        <input type="submit" value="Save" class="btn btn-primary" />
+      </div>
 </form>
