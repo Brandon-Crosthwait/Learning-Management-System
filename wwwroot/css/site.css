@@ -301,14 +301,78 @@ color: blue;
 }
 
 #Payment {
-    display: inline-block;
-    margin-left: 300px;
-    background-color: #FFFFFF;
-    color: #000000;
-    font-family: 'courier new';
-    font-style: normal;
-    font-weight: bold;
+    position: absolute;
+    margin-left: 270px;
+    margin-top: 50px;
+    width: 550px;
+    padding: 40px;
+	  background-color:#343a40;
+    color: white;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 20px;
   }
+
+.btn-payment{
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+ 
+  width: 200px;
+  height: 45px;
+  border-radius: 10px;
+  background-color: #3b8cff;
+
+}
+
+.cardInput{
+  margin-left: 20px;
+  width: 300px;
+  border-radius: 10px;
+  height: 40px;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.cardinfo-label{
+  display: inline-block;
+  width: 100px;
+  margin-left: 20px;
+  border-radius: 10px;
+  text-align: right;
+}
+
+#card-number{
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+#cvv-label{
+  margin-left: -50px;
+}
+
+#Month{
+  width: 60px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  text-align: right;
+}
+
+#Year{
+  width: 60px;
+  border-radius: 10px;
+  margin-left: -3px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#cvv{
+ width: 100px;
+ text-align: center;
+}
+
+#Amount{
+
+}
 
 .text-danger{
   display: block;

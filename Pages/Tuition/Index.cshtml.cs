@@ -16,6 +16,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LMS.Pages.Tuition
 {
@@ -39,13 +40,16 @@ namespace LMS.Pages.Tuition
         public int Amount { get; set; }
         
         [BindProperty]
-        public int CardNumber { get; set; }
+        public string CardNumber { get; set; }
 
         [BindProperty]
-        public int CVV { get; set; }
+        public string CVV { get; set; }
         
         [BindProperty]
-        public int Expiration { get; set; }
+        public string Month { get; set; }
+        
+        [BindProperty]
+        public string Year { get; set; }
 
         public int cost {get;set;}
 
@@ -76,32 +80,47 @@ namespace LMS.Pages.Tuition
 
             foreach (var item in CourseList)
             {
-                cost += item.CreditHours * 100;
+                cost = item.CreditHours * 100;
             }
             cost = cost - User.Payment;
         }
 
             public async Task<IActionResult> OnPostAsync()
             {
+                //grab user
                 UserID = (int)HttpContext.Session.GetInt32("userID");
                 User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                User.Payment = User.Payment - Amount;
-                await _context.SaveChangesAsync();
                 
+                //initalize httpClient
                 var httpClient = new HttpClient();
 
+                //Get Card Token
                 var token = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/tokens");
                 token.Headers.TryAddWithoutValidation("Authorization", "Bearer pk_test_51IV89XFlShtBVarWzUaU7rhtEQPlJi1wnxgTSOm2SZjuAIum2cc3oCuhEeL1FWTb2OzfjNo4fwZ6rDf98A3mlpkJ00DSY8nmLC"); 
-                token.Content = new StringContent("card[number]=4242424242424242&card[exp_month]=3&card[exp_year]=2022&card[cvc]=314");
+                token.Content = new StringContent("card[number]="+CardNumber+"&card[exp_month]="+Month+"&card[exp_year]="+Year+"&card[cvc]="+CVV);
                 token.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"); 
                 var response = await httpClient.SendAsync(token);
-                
-                var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/charges");
-                request.Headers.TryAddWithoutValidation("Authorization", "Bearer sk_test_51IV89XFlShtBVarWOf9WuHB2ra8HWdm3jpXc6VsrKqzpLAHpZkyculiBARpDmSfQGxhSjNmi5s82U2I0Ly58aaau005UGfGipY"); 
-                request.Content = new StringContent("amount=2000&currency=usd&source=tok_1IXxKZFlShtBVarWPR7jB3aQ&description=test");
-                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"); 
-                var checkout = await httpClient.SendAsync(request);
+                var contents = await response.Content.ReadAsStringAsync();
 
+                //If token is valid update payment in database
+                JObject tok = JObject.Parse(contents);
+                string tokenID = (string)tok["id"];
+                try{
+                    if(tokenID.StartsWith("tok")){
+                        User.Payment = User.Payment + Amount;
+                    }
+                }
+                catch{
+                    //payment not valid
+                }
+
+                //Make Charge
+                var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/charges");
+                request.Headers.TryAddWithoutValidation("Authorization", "Bearer sk_test_51IV89XFlShtBVarWOf9WuHB2ra8HWdm3jpXc6VsrKqzpLAHpZkyculiBARpDmSfQGxhSjNmi5s82U2I0Ly58aaau005UGfGipY");                     request.Content = new StringContent("amount="+Amount*100+"&currency=usd&source="+tokenID);
+                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"); 
+                var checkout = await httpClient.SendAsync(request);             
+                
+                await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
     }
