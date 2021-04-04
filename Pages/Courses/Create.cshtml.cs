@@ -83,6 +83,12 @@ namespace LMS.Pages.Courses
             this.UserID = (int)HttpContext.Session.GetInt32("userID");
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
+            this.CreateCourse(User);
+            return RedirectToPage("./Index");
+        }
+
+        public async Task CreateCourse(User user)
+        {
             if (Monday)
             {
                 Course.Days += "M";
@@ -106,13 +112,11 @@ namespace LMS.Pages.Courses
 
             Course.Time = StartTime.ToString("h:mmtt") + " - " + EndTime.ToString("h:mmtt");
 
-            Course.InstructorID = User.ID;
-            Course.Instructor = User.LastName + ", " + User.FirstName;
+            Course.InstructorID = user.ID;
+            Course.Instructor = user.LastName + ", " + user.FirstName;
 
             _context.Course.Add(Course);
             await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
         }
     }
 }

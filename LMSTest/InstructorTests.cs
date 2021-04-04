@@ -18,14 +18,20 @@ namespace LMSTest
         public async Task CourseOnPostAsyncTest()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=Blue2021!");
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
             var _context = new LMSContext(optionsBuilder.Options);
             LMS.Pages.Courses.CreateModel model = new LMS.Pages.Courses.CreateModel(_context);
 
-            string UserID = "4";
+            User user = new User()
+            {
+                FirstName = "David",
+                LastName = "Smith",
+                ID = 4,
+                IsInstructor = true,
+            };
+
             Course insertCourse = new Course()
             {
-                ID = 11111,
                 Number = 3030,
                 Name = "InstructorTest",
                 Department = "CS",
@@ -36,23 +42,19 @@ namespace LMSTest
             };
 
             model.Course = insertCourse;
-            model.HttpContext.Session.SetString("userID", UserID);
-            model.User.FirstName = "David";
-            model.User.LastName = "Smith";
-            model.User.ID = 4;
             model.Monday = true;
             model.Wednesday = true;
             model.Friday = true;
             model.StartTime = new DateTime(2021, 3, 22, 6, 30, 0);
             model.EndTime = new DateTime(2021, 3, 22, 8, 50, 0);
 
-
             // Act
-            await model.OnPostAsync();
+            await model.CreateCourse(user);
 
             // Assert
-            Assert.IsTrue(0 == 0);
+            Assert.IsTrue(true);
 
+            // Cleanup
             _context.Course.Remove(insertCourse);
             _context.SaveChanges();
         }
