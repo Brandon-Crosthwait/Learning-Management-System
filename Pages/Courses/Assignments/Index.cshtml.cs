@@ -22,26 +22,33 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public IList<Assignment> Assignment { get;set; }
 
+        public IList<LMS.Models.Submission> Submissions { get; set; }
+
         [BindProperty]
         public Course Course { get; set; }
 
         [BindProperty]
         public Department Department { get; set; }
 
-        public bool boolInstructor {get; set; }
+        public bool BoolInstructor { get; set; }
+
+        public int StudentID { get; set; }
 
 
         public async Task OnGetAsync()
         {
             bool sessionInstructor = bool.Parse(HttpContext.Session.GetString("isInstructorSession"));
+            StudentID = (int)HttpContext.Session.GetInt32("userID");
+
+            Submissions = _context.Submission.Where(x => x.StudentID == StudentID).ToList();
 
             if (sessionInstructor == true)
             {
-                boolInstructor = true;
+                BoolInstructor = true;
             } 
             else
             {
-                boolInstructor = false;
+                BoolInstructor = false;
             }
 
             // Retrieve the selected Course to display proper course info
@@ -56,6 +63,19 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
             // Display the list of Assignments for the selected Course
             Assignment = await _context.Assignment.Where(x => x.CourseID == courseID).ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostAsync(int assignment)
+        {
+            string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+            if (assignment != 0)
+            {
+                HttpContext.Session.SetInt32("currAssignment", assignment);
+
+                return new RedirectToPageResult("/Submission/Create");
+            }
+            return new RedirectToPageResult("/Assignments");
         }
     }
 }

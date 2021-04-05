@@ -3,14 +3,50 @@
 
 @{ 
     ViewData["Title"] = "Index";
-    var tuition = 0.00;
-    foreach (var item in Model.CourseList)
-    {
-        tuition += item.CreditHours * 100.00;
-    }
 }
-<div class="col-md-9">
-    <p> Tuition</p>
-    <p> Amount Due: $@tuition</p>
-</div>
 
+<form method="POST" id = "Payment">
+  <article>
+    <div>
+      <label><h1>Amount Due: $@Model.cost<h1></label>
+    </div>
+  </article> 
+      <div>
+        <label asp-for="@Model.CardNumber" class="cardinfo-label" for="card-number">Card Number:</label>
+        <input asp-for="@Model.CardNumber" class="cardInput" id="card-number" placeholder="1111-2222-3333-4444">
+      </div>
+
+      <div>
+        <label asp-for="@Model.Month" class="cardinfo-label">Date:</label>
+        <input asp-for="@Model.Month" class="cardInput" id="Month" placeholder="MM"/>
+        <input asp-for="@Model.Year" class="cardInput" id="Year" placeholder="YY"/>
+        <label asp-for="@Model.CVV" class="cardinfo-label" id ="cvv-label">CVV:</label>
+        <input asp-for="@Model.CVV" class="cardInput" id="cvv" placeholder="595"/>
+      </div>
+
+      <div>
+        <label asp-for="@Model.Amount" class="cardinfo-label">Amount:</label>
+        <input asp-for="@Model.Amount" class="cardInput" id="Amount"/>
+      </div>
+
+      <div>
+        <input type="submit" value="Send Payment" class="btn-payment" />
+      </div>
+</form>
+
+<script>
+
+</script>
+
+@section Scripts {  
+    <script>
+      $('input[id=card-number]').keypress(function(){
+      var rawNumbers = $(this).val().replace(/-/g,'');
+      var cardLength = rawNumbers.length;
+      if(cardLength !==0 && cardLength <=12 && cardLength % 4 == 0){
+        $(this).val($(this).val()+'-');
+      }
+      });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
