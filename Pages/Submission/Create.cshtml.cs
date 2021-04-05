@@ -86,6 +86,7 @@ namespace LMS.Pages.Submission
                 if (submission.StudentID == StudentID)
                 {
                     Submitted = true;
+                    Submission = submission;
                     break;
                 }
                 else
@@ -112,6 +113,7 @@ namespace LMS.Pages.Submission
             // Assign the student and assignment to the submission record
             Submission.StudentID = StudentID;
             Submission.AssignmentID = AssignmentID;
+            Submission.Grade = "--";
 
             if (Assignment.SubmissionType == "File Upload")
             {
@@ -129,7 +131,8 @@ namespace LMS.Pages.Submission
                     _context.Submission.Add(Submission);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToPage("./Index");
+                    HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
+                    return RedirectToPage("/Courses/Assignments/Index");
                 }
                 else
                 {
@@ -142,7 +145,8 @@ namespace LMS.Pages.Submission
                 _context.Submission.Add(Submission);
                 await _context.SaveChangesAsync();
 
-                return RedirectToPage("./Index");
+                HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
+                return RedirectToPage("/Courses/Assignments/Index");
             }
         }
 

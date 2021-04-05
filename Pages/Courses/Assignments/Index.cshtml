@@ -11,7 +11,7 @@
 <p>
     <h2>Assignments</h2>
 </p>
-@if (Model.boolInstructor)
+@if (Model.BoolInstructor)
 {
     <a asp-page="Create">Add Assignment</a>
 }
@@ -29,32 +29,70 @@
             <th>
                 Submission Type
             </th>
+            @if (!Model.BoolInstructor)
+            {
+                <th>
+                    Grade
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Assignment)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.Due)*@
-                    @item.Due.ToString("dddd, MM/dd h:mm tt")
-                </td>
-                <td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Due)*@
+                @item.Due.ToString("dddd, MM/dd h:mm tt")
+            </td>
+            <td>
+                @if (!Model.BoolInstructor)
+                {
+                    <form asp-page-handler="view" method="post">
+                        <input type="hidden" name="assignment" value="@item.ID" />
+                        <button type="submit" class="btn btn-link text-left text-secondary:hover">
+                            <span>
+                                <i class="SubmissionTypeLink">
+                                    @Html.DisplayFor(modelItem => item.SubmissionType)
+                                </i>
+                            </span>
+                        </button>
+                    </form>
+                }
+                else
+                {
                     @Html.DisplayFor(modelItem => item.SubmissionType)
-                </td>
+                }
+            </td>
+            @if (!Model.BoolInstructor)
+            {
                 <td>
-                    @if (Model.boolInstructor)
+                    @foreach (var submission in Model.Submissions)
                     {
-                        <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
+                        if (item.ID == submission.AssignmentID)
+                        {
+                            var currGrade = submission.Grade + '/' + item.Points;
+                            @Html.DisplayFor(modelItem => currGrade)
+                            break;
+                        }
                     }
-                    @*|<a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
                 </td>
-            </tr>
+            }
+            <td>
+                @if (Model.BoolInstructor)
+                {
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
+                    <a>|</a>
+                    <a asp-page="/Submission/Index" asp-route-id="@item.ID">Grade</a>
+                }
+                @*|<a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+            <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>*@
+            </td>
+        </tr>
         }
     </tbody>
 </table>
