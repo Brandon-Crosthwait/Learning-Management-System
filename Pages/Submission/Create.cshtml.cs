@@ -33,6 +33,8 @@ namespace LMS.Pages.Submission
 
         public Department Department { get; set; }
 
+        public List<int> GradesByAssignment { get; set; }
+
         [BindProperty]
         public LMS.Models.Submission Submission { get; set; }
 
@@ -67,6 +69,7 @@ namespace LMS.Pages.Submission
 
             List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
             SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
+            GradesByAssignment = SubmissionsByAssignment.Select(s => int.Parse(s.Grade)).ToList();
 
             Submitted = false;
 
