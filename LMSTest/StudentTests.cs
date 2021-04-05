@@ -55,5 +55,35 @@ namespace LMSTest
             testContext.Submission.Remove(assignmentSubmission);
             testContext.SaveChanges();
         }
+
+        public async Task Payment()
+            {
+                /** Arrange **/
+                var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+                LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+                int userID = 1;
+                User User = context.User.Where(u => u.ID == userID).FirstOrDefault();
+
+                var pageModel = new LMS.Pages.Tuition.IndexModel(context)
+                {
+                    UserID = userID,
+                };
+
+                /** Act **/
+                int oldPayment = User.Payment;
+
+                string cardnumber = "4242424242424242";
+                string cvc = "595";
+                string month = "08";
+                string year = "23";
+                int amount = 100;
+
+                await pageModel.processPayment(cardnumber, cvc, month, year, amount, userID);
+
+                int newPayment = User.Payment;
+
+                /** Compare **/
+                Assert.AreNotEqual(oldPayment, newPayment);
+            }
     }
 }
