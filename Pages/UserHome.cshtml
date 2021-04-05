@@ -12,27 +12,29 @@
 <div class="card-container">
     @foreach (var item in Model.CourseList)
     {
-        <form asp-page-handler="view" method="post">
-            <input type="hidden" name="course" value="@item.ID" />
-            <button type="submit">
-                <div class="card">
-                    <div class="card-title">
-                        <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
-                        <h5>@Html.DisplayFor(model => item.Name)</h5>
-                    </div>
-                    <div @*class="card-info"*@>
-                        <h5>Instructor:</h5>
-                        <h6>@Html.DisplayFor(model => item.Instructor)</h6>
-                        <h5>Meeting Location:</h5>
-                        <h6>@Html.DisplayFor(model => item.Location)</h6>
-                        <h5>Meeting Day/Time:</h5>
-                        <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
-                    </div>
+    <form asp-page-handler="view" method="post">
+        <input type="hidden" name="course" value="@item.ID" />
+        <button type="submit">
+            <div class="card">
+                <div class="card-title">
+                    <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
+                    <h5>@Html.DisplayFor(model => item.Name)</h5>
                 </div>
-            </button>
-        </form>
-    }
-</div>
+                <div class="card-info">
+                    <h5>Instructor:</h5>
+                    <h6>@Html.DisplayFor(model => item.Instructor)</h6>
+                    <h5>Meeting Location:</h5>
+                    <h6>@Html.DisplayFor(model => item.Location)</h6>
+                    <h5>Meeting Day/Time:</h5>
+                    <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
+                </div>
+            </div>
+        </button>
+
+    </form>
+
+                }
+    </div>
 
 
 <div id="notification">
