@@ -99,55 +99,15 @@ namespace LMS.Pages.Submission
         }
 
 
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
             AssignmentID = (int)HttpContext.Session.GetInt32("currAssignment");
 
-            Student = _context.User.Where(u => u.ID == StudentID).FirstOrDefault();
-            Assignment = _context.Assignment.Where(u => u.ID == AssignmentID).FirstOrDefault();
-            Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
-            Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
-
-            // Assign the student and assignment to the submission record
-            Submission.StudentID = StudentID;
-            Submission.AssignmentID = AssignmentID;
-            Submission.Grade = "--";
-
-            if (Assignment.SubmissionType == "File Upload")
-            {
-                // Assign the file to the submission record
-                if (File != null)
-                {
-                    if (Submission.Content != null)
-                    {
-                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
-                        "StudentSubmissions", Submission.Content);
-                        System.IO.File.Delete(filePath);
-                    }
-                    Submission.Content = ProcessUploadedFile(Student, Course, Department);
-
-                    _context.Submission.Add(Submission);
-                    await _context.SaveChangesAsync();
-
-                    HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
-                    return RedirectToPage("/Courses/Assignments/Index");
-                }
-                else
-                {
-                    return Page();
-                }
-            }
-            else
-            {
-                Submission.Content = Content;
-                _context.Submission.Add(Submission);
-                await _context.SaveChangesAsync();
-
-                HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
-                return RedirectToPage("/Courses/Assignments/Index");
-            }
+            SubmitAssignment(StudentID, AssignmentID);
+            return Page();
         }
 
         private string ProcessUploadedFile(User Student, Course Course, Department Department)
@@ -173,6 +133,48 @@ namespace LMS.Pages.Submission
             }
 
             return filePath;
+        }
+
+        public async void SubmitAssignment(int studentID, int assignmentID)
+        {
+            Student = _context.User.Where(u => u.ID == studentID).FirstOrDefault();
+            Assignment = _context.Assignment.Where(u => u.ID == assignmentID).FirstOrDefault();
+            Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
+            Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
+
+            // Assign the student and assignment to the submission record
+            Submission.StudentID = studentID;
+            Submission.AssignmentID = assignmentID;
+            Submission.Grade = "--";
+
+            if (Assignment.SubmissionType == "File Upload")
+            {
+                // Assign the file to the submission record
+                if (File != null)
+                {
+                    if (Submission.Content != null)
+                    {
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
+                        "StudentSubmissions", Submission.Content);
+                        System.IO.File.Delete(filePath);
+                    }
+                    Submitted = true;
+                    Submission.Content = ProcessUploadedFile(Student, Course, Department);
+                    _context.Submission.Add(Submission);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                Submitted = true;
+                Submission.Content = Content;
+                _context.Submission.Add(Submission);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
