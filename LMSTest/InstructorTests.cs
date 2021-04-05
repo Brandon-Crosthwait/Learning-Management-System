@@ -15,11 +15,12 @@ namespace LMSTest
     public class InstructorTests
     {
         [TestMethod]
-        public async Task CourseOnPostAsyncTest()
+        public async Task CourseCreateTest()
         {
             // Arrange
             var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
             var _context = new LMSContext(optionsBuilder.Options);
+
             LMS.Pages.Courses.CreateModel model = new LMS.Pages.Courses.CreateModel(_context);
 
             User user = new User()
@@ -49,10 +50,12 @@ namespace LMSTest
             model.EndTime = new DateTime(2021, 3, 22, 8, 50, 0);
 
             // Act
+            int precount = _context.Course.Where(c => c.InstructorID == user.ID).ToList().Count();
             await model.CreateCourse(user);
+            int postcount = _context.Course.Where(c => c.InstructorID == user.ID).ToList().Count();
 
             // Assert
-            Assert.IsTrue(true);
+            Assert.AreNotEqual(precount, postcount);
 
             // Cleanup
             _context.Course.Remove(insertCourse);
