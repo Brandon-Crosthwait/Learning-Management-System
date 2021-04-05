@@ -25,6 +25,11 @@ namespace LMS.Pages.Submission
             this.webHostEnvironment = webHostEnvironment;
         }
 
+        public CreateModel(LMS.Data.LMSContext context)
+        {
+            _context = context;
+        }
+
         public User Student { get; set; }
 
         public Assignment Assignment { get; set; }
@@ -98,20 +103,51 @@ namespace LMS.Pages.Submission
         }
 
 
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async void OnPostAsync()
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
             AssignmentID = (int)HttpContext.Session.GetInt32("currAssignment");
 
-            Student = _context.User.Where(u => u.ID == StudentID).FirstOrDefault();
-            Assignment = _context.Assignment.Where(u => u.ID == AssignmentID).FirstOrDefault();
+            await SubmitAssignment(StudentID, AssignmentID);
+        }
+
+        private string ProcessUploadedFile(User Student, Course Course, Department Department)
+        {
+            string uniqueFileName = null;
+            string filePath = null;
+
+            if (File != null)
+            {
+                string studentName = Student.FirstName.ToLower() + Student.LastName.ToLower();
+                studentName = studentName.Replace(" ", String.Empty);
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "StudentSubmissions/" + Department.Code + Course.Number + "/" + Student.ID + "_" + studentName);
+                if (!System.IO.Directory.Exists(uploadsFolder))
+                {
+                    System.IO.Directory.CreateDirectory(uploadsFolder);
+                }
+                uniqueFileName = File.FileName;
+                filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    File.CopyTo(fileStream);
+                }
+            }
+
+            return filePath;
+        }
+
+        public async Task<IActionResult> SubmitAssignment(int studentID, int assignmentID)
+        {
+            Student = _context.User.Where(u => u.ID == studentID).FirstOrDefault();
+            Assignment = _context.Assignment.Where(u => u.ID == assignmentID).FirstOrDefault();
             Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
             Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
 
             // Assign the student and assignment to the submission record
-            Submission.StudentID = StudentID;
-            Submission.AssignmentID = AssignmentID;
+            Submission.StudentID = studentID;
+            Submission.AssignmentID = assignmentID;
 
             if (Assignment.SubmissionType == "File Upload")
             {
@@ -144,31 +180,6 @@ namespace LMS.Pages.Submission
 
                 return RedirectToPage("./Index");
             }
-        }
-
-        private string ProcessUploadedFile(User Student, Course Course, Department Department)
-        {
-            string uniqueFileName = null;
-            string filePath = null;
-
-            if (File != null)
-            {
-                string studentName = Student.FirstName.ToLower() + Student.LastName.ToLower();
-                studentName = studentName.Replace(" ", String.Empty);
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "StudentSubmissions/" + Department.Code + Course.Number + "/" + Student.ID + "_" + studentName);
-                if (!System.IO.Directory.Exists(uploadsFolder))
-                {
-                    System.IO.Directory.CreateDirectory(uploadsFolder);
-                }
-                uniqueFileName = File.FileName;
-                filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    File.CopyTo(fileStream);
-                }
-            }
-
-            return filePath;
         }
     }
 }
