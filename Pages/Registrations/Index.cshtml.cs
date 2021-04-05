@@ -76,6 +76,7 @@ namespace LMS.Pages.Registrations
         public async Task<IActionResult> OnPostAsync(int course)
         {
             UserID = (int)HttpContext.Session.GetInt32("userID");
+
             RegList = _context.Registration.Where(u => u.Student == UserID).ToList();
             var currRegistration = RegList.Where(u => u.Course == course).FirstOrDefault();
             if (currRegistration != null)
@@ -84,12 +85,17 @@ namespace LMS.Pages.Registrations
             }
             else
             {
-                Registration.Course = course;
-                Registration.Student = UserID;
-                _context.Registration.Add(Registration);
+                AddCourse(course);
             }
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
+        }
+
+        public void AddCourse(int course)
+        {
+            Registration.Course = course;
+            Registration.Student = UserID;
+            _context.Registration.Add(Registration);
         }
     }
 }
