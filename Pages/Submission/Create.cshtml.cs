@@ -135,7 +135,7 @@ namespace LMS.Pages.Submission
             return filePath;
         }
 
-        public async void SubmitAssignment(int studentID, int assignmentID)
+        public async Task SubmitAssignment(int studentID, int assignmentID)
         {
             Student = _context.User.Where(u => u.ID == studentID).FirstOrDefault();
             Assignment = _context.Assignment.Where(u => u.ID == assignmentID).FirstOrDefault();

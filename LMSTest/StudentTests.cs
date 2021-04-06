@@ -19,7 +19,7 @@ namespace LMSTest
         private readonly IWebHostEnvironment webHostEnvironment;
 
         [TestMethod]
-        public void SubmitAssignment()
+        public async Task SubmitAssignmentTest()
         {
             // Arrange
             var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
@@ -42,7 +42,7 @@ namespace LMSTest
             submissionRecords = testContext.Submission.Where(s => s.StudentID == userID).ToList();
             int preCount = submissionRecords.Count();
 
-            pageModel.SubmitAssignment(userID, assignmentID);
+            await pageModel.SubmitAssignment(userID, assignmentID);
 
             submissionRecords = testContext.Submission.Local.Where(s => s.StudentID == userID).ToList();
             int postCount = submissionRecords.Count();
@@ -56,7 +56,8 @@ namespace LMSTest
             testContext.SaveChanges();
         }
 
-        public async Task Payment()
+        [TestMethod]
+        public async Task PaymentTest()
             {
                 /** Arrange **/
                 var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
