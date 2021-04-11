@@ -69,7 +69,17 @@ namespace LMS.Pages.Submission
 
             List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
             SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
-            GradesByAssignment = SubmissionsByAssignment.Select(s => int.Parse(s.Grade)).ToList();
+            //GradesByAssignment = SubmissionsByAssignment.Select(s => int.Parse(s.Grade)).ToList();
+            GradesByAssignment = new List<int>();
+
+            foreach(var item in SubmissionsByAssignment)
+            {
+                if (item.Grade != "--")
+                {
+                    int score = Int32.Parse(item.Grade);
+                    GradesByAssignment.Add(score);
+                }
+            }
 
             Submitted = false;
 
