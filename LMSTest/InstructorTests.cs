@@ -114,13 +114,12 @@ namespace LMSTest
             var submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
 
             /** Act **/
-            var preValue = submission.Grade;
             await model.SubmitGrade(grade, submission);
             submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
             var postValue = submission.Grade;
 
             /** Compare **/
-            Assert.AreNotEqual(preValue, postValue);
+            Assert.AreEqual("10", postValue);
 
             /** Cleanup **/
             await model.SubmitGrade("--", submission);
