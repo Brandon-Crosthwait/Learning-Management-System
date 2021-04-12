@@ -178,7 +178,7 @@ namespace LMS.Pages
             Assignments = await assignments.ToListAsync();
         }
 
-        private async Task PopulateInstructorNotifications()
+        private void PopulateInstructorNotifications()
         {
             NotificationList = new List<Notification>();
             NotificationList = _context.Notification.Where(n => n.StudentID == UserID).ToList();
