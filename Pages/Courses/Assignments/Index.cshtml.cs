@@ -24,6 +24,10 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public IList<LMS.Models.Submission> Submissions { get; set; }
 
+        public List<double> Totals { get; set; }
+
+        public List<double> Grades { get; set; }
+
         [BindProperty]
         public Course Course { get; set; }
 
@@ -34,26 +38,20 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public int StudentID { get; set; }
 
+        public double PointsPossible { get; set; }
+
+        public double CourseGrade { get; set; }
 
         public async Task OnGetAsync()
         {
             bool sessionInstructor = bool.Parse(HttpContext.Session.GetString("isInstructorSession"));
             StudentID = (int)HttpContext.Session.GetInt32("userID");
 
-            Submissions = _context.Submission.Where(x => x.StudentID == StudentID).ToList();
-
-            if (sessionInstructor == true)
-            {
-                BoolInstructor = true;
-            } 
-            else
-            {
-                BoolInstructor = false;
-            }
-
             // Retrieve the selected Course to display proper course info
             int courseID = (int)HttpContext.Session.GetInt32("currCourse");
             Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);
+
+            Submissions = await _context.Submission.Where(x => x.StudentID == StudentID).ToListAsync();
 
             // Retrieve the Department so that the code can be displayed on page
             if (Int32.TryParse(Course.Department, out int departmentID))
@@ -63,6 +61,60 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
             // Display the list of Assignments for the selected Course
             Assignment = await _context.Assignment.Where(x => x.CourseID == courseID).ToListAsync();
+
+            //Totals = new List<double>();
+            //Grades = new List<double>();
+
+            //foreach (var item in Assignment)
+            //{
+            //    foreach (var submission in Submissions)
+            //    {
+            //        if (item.ID == submission.AssignmentID)
+            //        {
+            //            if (submission.Grade != "--")
+            //            {
+            //                double total = item.Points;
+            //                Totals.Add(total);
+            //            }
+            //        }
+            //    }
+            //}
+
+            //foreach (var item in Totals)
+            //{
+            //    PointsPossible += item;
+            //}
+
+            //foreach (var item in Assignment)
+            //{
+            //    foreach (var submission in Submissions)
+            //    {
+            //        if (item.ID == submission.AssignmentID)
+            //        {
+            //            if (submission.Grade != "--")
+            //            {
+            //                double grade = Double.Parse(submission.Grade);
+            //                Grades.Add(grade);
+            //            }
+            //        }
+            //    }
+            //}
+
+            //foreach (var item in Grades)
+            //{
+            //    CourseGrade += item;
+            //}
+
+            //CourseGrade = (CourseGrade / PointsPossible) * 100;
+
+            if (sessionInstructor == true)
+            {
+                BoolInstructor = true;
+            } 
+            else
+            {
+                BoolInstructor = false;
+            }
         }
 
         public async Task<IActionResult> OnPostAsync(int assignment)
