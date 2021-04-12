@@ -32,11 +32,25 @@ namespace LMS.Pages.Submission
 
         public Department Department { get; set; }
 
+        public Registration Registration { get; set; }
+
         [BindProperty]
         public string Grade { get; set; }
 
         [BindProperty]
         public bool FileUpload { get; set; }
+
+        public IList<Assignment> Assignments { get; set; }
+
+        public IList<LMS.Models.Submission> Submissions { get; set; }
+
+        public List<double> Totals { get; set; }
+
+        public List<double> Grades { get; set; }
+
+        public double PointsPossible { get; set; }
+
+        public double CourseGrade { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -91,6 +105,8 @@ namespace LMS.Pages.Submission
                 }
             }
 
+            await UpdateTotalGrade(Submission);
+
             return RedirectToPage("./Index");
         }
 
@@ -119,6 +135,54 @@ namespace LMS.Pages.Submission
             {
                 return Page();
             }
+        }
+
+        public async Task UpdateTotalGrade(LMS.Models.Submission sub)
+        {
+            Student = await _context.User.FirstOrDefaultAsync(u => u.ID == sub.StudentID);
+            Assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.ID == sub.AssignmentID);
+            Registration = await _context.Registration.FirstOrDefaultAsync(r => r.Student == Student.ID && r.Course == Assignment.CourseID);
+
+            Submissions = await _context.Submission.Where(x => x.StudentID == Student.ID).ToListAsync();
+            Assignments = await _context.Assignment.Where(x => x.CourseID == Registration.Course).ToListAsync();
+
+            Totals = new List<double>();
+            Grades = new List<double>();
+
+            foreach (var item in Assignments)
+            {
+                foreach (var submission in Submissions)
+                {
+                    if (item.ID == submission.AssignmentID)
+                    {
+                        if (submission.Grade != "--")
+                        {
+                            double total = item.Points;
+                            Totals.Add(total);
+                            double grade = Double.Parse(submission.Grade);
+                            Grades.Add(grade);
+                        }
+                    }
+                }
+            }
+
+            foreach (var item in Totals)
+            {
+                PointsPossible += item;
+            }
+
+            foreach (var item in Grades)
+            {
+                CourseGrade += item;
+            }
+
+            CourseGrade = (CourseGrade / PointsPossible) * 100;
+
+            CourseGrade = Math.Round(CourseGrade, 2);
+
+            Registration.Grade = CourseGrade;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
