@@ -86,5 +86,153 @@ namespace LMSTest
                 /** Compare **/
                 Assert.AreNotEqual(oldPayment, newPayment);
             }
+
+        [TestMethod]
+        public void StudentRegisterCourseTest()
+        {
+            /** Arrange **/
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+            int userID = 1010;
+
+            var pageModel = new LMS.Pages.Registrations.IndexModel(context)
+            {
+                UserID = userID,
+                Registration = new Registration(),
+            };
+
+            /** Act **/
+            List<Registration> registrationRecords;
+            registrationRecords = context.Registration.Where(r => r.Student == userID).ToList();
+            int preCount = registrationRecords.Count();
+
+            int courseID = 10;
+            pageModel.AddCourse(courseID);
+
+            registrationRecords = context.Registration.Local.Where(r => r.Student == userID).ToList();
+            int postCount = registrationRecords.Count();
+
+            /** Compare **/
+            Assert.AreNotEqual(preCount, postCount);
+        }
+
+        [TestMethod]
+        public void ToDoListOrderAssignmentsTest()
+        {
+            /** Arrange **/
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+
+            Assignment Assignment1 = new Assignment()
+            {
+                Title = "TestAssignment1",
+                Points = 100,
+                Description = "One year ago",
+                Due = DateTime.Now.AddDays(-365),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment2 = new Assignment()
+            {
+                Title = "TestAssignment2",
+                Points = 100,
+                Description = "Six months ago",
+                Due = DateTime.Now.AddDays(-182),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment3 = new Assignment()
+            {
+                Title = "TestAssignment3",
+                Points = 100,
+                Description = "One month Ahead",
+                Due = DateTime.Now.AddMonths(1),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment4 = new Assignment()
+            {
+                Title = "TestAssignment4",
+                Points = 100,
+                Description = "Two months ahead",
+                Due = DateTime.Now.AddMonths(2),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment5 = new Assignment()
+            {
+                Title = "TestAssignment5",
+                Points = 100,
+                Description = "Three months ahead",
+                Due = DateTime.Now.AddMonths(3),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment6 = new Assignment()
+            {
+                Title = "TestAssignment6",
+                Points = 100,
+                Description = "Four months ahead",
+                Due = DateTime.Now.AddMonths(4),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+            Assignment Assignment7 = new Assignment()
+            {
+                Title = "TestAssignment7",
+                Points = 100,
+                Description = "Five months ahead",
+                Due = DateTime.Now.AddMonths(5),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+
+            Assignment Assignment8 = new Assignment()
+            {
+                Title = "TestAssignment8",
+                Points = 100,
+                Description = "Six months ahead",
+                Due = DateTime.Now.AddMonths(6),
+                SubmissionType = "Test Box Entry",
+                CourseID = 8,
+            };
+
+
+            List<Assignment> TestAssignmentList = new List<Assignment>();
+            TestAssignmentList.Add(Assignment1);
+            TestAssignmentList.Add(Assignment2);
+            TestAssignmentList.Add(Assignment3);
+            TestAssignmentList.Add(Assignment4);
+            TestAssignmentList.Add(Assignment5);
+            TestAssignmentList.Add(Assignment6);
+            TestAssignmentList.Add(Assignment7);
+            TestAssignmentList.Add(Assignment8);
+
+            var pageModel = new LMS.Pages.UserHomeModel(context)
+            {
+                AssignmentList = TestAssignmentList,
+            };
+
+            /** Act **/
+            pageModel.OrderAssignments();
+            TestAssignmentList = pageModel.AssignmentList;
+
+            /** Assert **/
+            Assert.IsTrue(TestAssignmentList.Count == 5);
+
+            int temp = 0;
+            for (int i = 1; i < TestAssignmentList.Count; i++)
+            {
+                Assert.IsTrue(TestAssignmentList[temp].Due <= TestAssignmentList[i].Due);
+                temp = i;
+            }
+        }
     }
 }
