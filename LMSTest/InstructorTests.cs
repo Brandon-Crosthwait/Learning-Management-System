@@ -101,6 +101,34 @@ namespace LMSTest
             context.SaveChanges();
         }
 
+        [TestMethod]
+        public async Task GradeAssignmentTest()
+        {
+            /** Arrange **/
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+
+            LMS.Pages.Submission.EditModel model = new LMS.Pages.Submission.EditModel(context);
+            int submissionID = 138; 
+            string grade = "10";
+            var submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
+
+            /** Act **/
+            var preValue = submission.Grade;
+            await model.SubmitGrade(grade, submission);
+            submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
+            var postValue = submission.Grade;
+
+            /** Compare **/
+            Assert.AreNotEqual(preValue, postValue);
+
+            /** Cleanup **/
+            await model.SubmitGrade("--", submission);
+
+
+
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();

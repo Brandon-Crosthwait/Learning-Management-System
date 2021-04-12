@@ -83,15 +83,12 @@ namespace LMS.Pages.Submission
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            Submission = await _context.Submission.FirstOrDefaultAsync(x => x.ID == id);
-
+            this.Submission = await _context.Submission.FirstOrDefaultAsync(x => x.ID == id);
             HttpContext.Session.SetInt32("currAssignment", Submission.AssignmentID);
-
-            Submission.Grade = Grade;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await this.SubmitGrade(Grade, this.Submission);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -106,8 +103,13 @@ namespace LMS.Pages.Submission
             }
 
             await UpdateTotalGrade(Submission);
-
             return RedirectToPage("./Index");
+        }
+
+        public async Task SubmitGrade(string grade, Models.Submission submission)
+        {
+            submission.Grade = grade;
+            await _context.SaveChangesAsync();
         }
 
         private bool SubmissionExists(int id)
