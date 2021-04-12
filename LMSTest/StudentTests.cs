@@ -241,27 +241,24 @@ namespace LMSTest
                 /** Arrange **/
                 var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
                 LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
-                int userID = 1;
-                User User = context.User.Where(u => u.ID == userID).FirstOrDefault();
 
-                var pageModel = new LMS.Pages.Tuition.IndexModel(context)
-                {
-                    UserID = userID,
-                };
+                var pageModel = new LMS.Pages.LoginModel(context){};
 
                 /** Act **/
-                string Password = "11111111";
-                string cvc = "595";
-                string month = "08";
-                string year = "23";
-                int amount = 100;
+                string salt = "gvR9ERGfxo1gct8v3kHctg==";
+                string password = "n+DqG5V5oHD8D1gGn3Y7eRIVwcLoSR8m8B6llcxfvJk=";
+                string unhashed = "11111111";
 
-                await pageModel.processPayment(cardnumber, cvc, month, year, amount, userID);
-
-                int newPayment = User.Payment;
-
-                /** Compare **/
-                Assert.AreNotEqual(oldPayment, newPayment);
+                // moveToHome(string Salt, string Password, int ID, string unHashed)
+                bool condition = pageModel.moveToHome(salt, password, unhashed);
+                if (condition)
+                {
+                    Assert.IsTrue(true);
+                }
+                else
+                {
+                    Assert.IsTrue(false);
+                }
             }
     }
 }

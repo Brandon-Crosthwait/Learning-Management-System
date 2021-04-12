@@ -35,7 +35,7 @@ namespace LMS.Pages
 
             if (userRecord != null && Password != null)
             {   
-                if (moveToHome(userRecord.Salt, userRecord.Password, userRecord.ID))
+                if (moveToHome(userRecord.Salt, userRecord.Password, Password))
                 {
                     HttpContext.Session.SetInt32("userID", userRecord.ID);
                     HttpContext.Session.SetString("userFirstName", userRecord.FirstName);
@@ -55,14 +55,14 @@ namespace LMS.Pages
 
         }
 
-         public bool moveToHome(string Salt, string Password, int ID){
-                // Grab user's salt and store in byte array
+        public bool moveToHome(string Salt, string Password, string unHashed){    
+            // Grab user's salt and store in byte array
                 byte[] salt = Convert.FromBase64String(Salt);
                 
                 bool condition = false; 
                 // Hash the user entered password
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: Password,
+                    password: unHashed,
                     salt: salt,
                     prf: KeyDerivationPrf.HMACSHA1,
                     iterationCount: 10000,
