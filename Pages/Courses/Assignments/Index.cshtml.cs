@@ -40,7 +40,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public double CourseGrade { get; set; }
 
-        public IList<Registration> Registration {get; set;}
+        public IList<Registration> Registrations {get; set;}
         public Registration StudentRegistration { get; set; }
 
         public int one;
@@ -72,7 +72,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             
             Submissions = await _context.Submission.Where(x => x.StudentID == StudentID).ToListAsync();
 
-            Registration = await _context.Registration.Where(c => c.Course == courseID).ToListAsync();
+            Registrations = await _context.Registration.Where(c => c.Course == courseID).ToListAsync();
             StudentRegistration = await _context.Registration.Where(u => u.Student == StudentID).FirstOrDefaultAsync();
             
             // Retrieve the Department so that the code can be displayed on page
@@ -94,7 +94,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             average = 0;
             scount = 0;
 
-            foreach (var item in Registration)
+            foreach (var item in Registrations)
             {   
                     average = average + item.Grade;
                     scount = scount + 1;
