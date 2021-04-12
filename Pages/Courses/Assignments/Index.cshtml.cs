@@ -24,9 +24,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public IList<LMS.Models.Submission> Submissions { get; set; }
 
-        public List<double> Totals { get; set; }
-
-        public List<double> Grades { get; set; }
+        public Registration Registration { get; set; }
 
         [BindProperty]
         public Course Course { get; set; }
@@ -37,10 +35,6 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         public bool BoolInstructor { get; set; }
 
         public int StudentID { get; set; }
-
-        public double PointsPossible { get; set; }
-
-        public double CourseGrade { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -62,50 +56,8 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             // Display the list of Assignments for the selected Course
             Assignment = await _context.Assignment.Where(x => x.CourseID == courseID).ToListAsync();
 
-            //Totals = new List<double>();
-            //Grades = new List<double>();
-
-            //foreach (var item in Assignment)
-            //{
-            //    foreach (var submission in Submissions)
-            //    {
-            //        if (item.ID == submission.AssignmentID)
-            //        {
-            //            if (submission.Grade != "--")
-            //            {
-            //                double total = item.Points;
-            //                Totals.Add(total);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //foreach (var item in Totals)
-            //{
-            //    PointsPossible += item;
-            //}
-
-            //foreach (var item in Assignment)
-            //{
-            //    foreach (var submission in Submissions)
-            //    {
-            //        if (item.ID == submission.AssignmentID)
-            //        {
-            //            if (submission.Grade != "--")
-            //            {
-            //                double grade = Double.Parse(submission.Grade);
-            //                Grades.Add(grade);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //foreach (var item in Grades)
-            //{
-            //    CourseGrade += item;
-            //}
-
-            //CourseGrade = (CourseGrade / PointsPossible) * 100;
+            // Get Registration to display Grade
+            Registration = await _context.Registration.FirstOrDefaultAsync(r => r.Student == StudentID && r.Course == courseID);
 
             if (sessionInstructor == true)
             {
