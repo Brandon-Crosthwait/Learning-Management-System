@@ -24,6 +24,19 @@ namespace LMS.Pages.Submission
 
         public IList<LMS.Models.User> Students { get; set; }
 
+        public Assignment Assignment {get; set;}
+
+        public int one;
+        public int two;
+        public int three;
+        public int four;
+        public int five;
+        public int six;
+        public int seven;
+        public double average;
+        public int scount;
+        public double placeholder;
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -34,6 +47,51 @@ namespace LMS.Pages.Submission
 
             Students = await _context.User.Where(x => !x.IsInstructor).ToListAsync();
 
+            one = 0;
+            two = 0;
+            three = 0;
+            four = 0;
+            five = 0;
+            six = 0;
+            seven = 0;
+            average = 0;
+            scount = 0;
+
+            foreach (var item in Submission)
+            {
+                Assignment = _context.Assignment.Where(u => u.ID == item.AssignmentID).FirstOrDefault();
+                
+                if(item.Grade != "--"){
+                    placeholder = ((double.Parse(item.Grade)/Assignment.Points)*100);
+                    average = average + placeholder;
+                    scount = scount + 1;
+
+                    if(placeholder >= 95){
+                        seven = seven + 1;
+                    }
+                    else if(placeholder >= 90){
+                        six = six + 1;
+                    }
+                    else if(placeholder >= 85){
+                        five = five + 1;
+                    }
+                    else if(placeholder >= 80){
+                        four = four + 1;
+                    }
+                    else if(placeholder >= 75){
+                        three = three + 1;
+                    }
+                    else if(placeholder >= 70){
+                        two = two + 1;
+                    }
+                    else if(placeholder < 70){
+                        one = one + 1;
+                    }
+                }
+
+            }
+            average = Math.Round((average / scount), 2);
+            
             return Page();
         }
     }
