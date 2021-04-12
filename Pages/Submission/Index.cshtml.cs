@@ -33,9 +33,7 @@ namespace LMS.Pages.Submission
         public int five;
         public int six;
         public int seven;
-        
-        public int placeholder;
-        public int points;
+        public double placeholder;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -58,10 +56,9 @@ namespace LMS.Pages.Submission
             foreach (var item in Submission)
             {
                 Assignment = _context.Assignment.Where(u => u.ID == item.AssignmentID).FirstOrDefault();
-                points = Assignment.Points;
                 
                 if(item.Grade != "--"){
-                    placeholder = (Int32.Parse(item.Grade)/points)*100;
+                    placeholder = ((double.Parse(item.Grade)/Assignment.Points)*100);
                     if(placeholder >= 95){
                         seven = seven + 1;
                     }
