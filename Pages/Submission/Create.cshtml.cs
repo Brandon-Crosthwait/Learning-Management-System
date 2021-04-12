@@ -33,7 +33,7 @@ namespace LMS.Pages.Submission
 
         public Department Department { get; set; }
 
-        public List<int> GradesByAssignment { get; set; }
+        public int[] GradesByAssignment { get; set; }
 
         [BindProperty]
         public LMS.Models.Submission Submission { get; set; }
@@ -69,7 +69,8 @@ namespace LMS.Pages.Submission
 
             List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
             SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
-            GradesByAssignment = SubmissionsByAssignment.Select(s => int.Parse(s.Grade)).ToList();
+
+            this.PopulateGraphData(SubmissionsByAssignment);
 
             Submitted = false;
 
@@ -99,6 +100,18 @@ namespace LMS.Pages.Submission
             }
 
             return Page();
+        }
+
+        private void PopulateGraphData(List<Models.Submission> submissionsByAssignment)
+        {
+            var gradedSubmissions = submissionsByAssignment.Where(g => g.Grade != "--").ToList();
+            var points = Assignment.Points;
+            int[] data = new int[points];
+            for (int i = 0; i <= points; i++)
+            {
+                data[i] = gradedSubmissions.Count(g => int.Parse(g.Grade) == i);
+            }
+            this.GradesByAssignment = data;
         }
 
 

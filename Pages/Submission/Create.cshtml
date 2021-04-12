@@ -69,25 +69,36 @@
 @section Scripts {
     <script script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', { 'packages': ['corechart', 'linel']});
         google.charts.setOnLoadCallback(drawChart);
-        var dataset = new [['Scores']];
-
-        @{ foreach (var item in Model.GradesByAssignment)
-            {
-            @: dataset = dataset[0].push(@item);
-            }
-        }
 
         function drawChart()
         {
-            var data = google.visualization.arrayToDataTable(dataset, true);
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Grades');
+            var counter = 0;
 
-        var options = {
-            legend: 'none'
-            };
+            @{ foreach (var item in Model.GradesByAssignment)
+               {
+                @: data.addRow([counter,@item]);
+                @: counter++;
+               }
+            }
 
-        var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+            var options = {
+                hAxis: {
+                    title: "Grade"
+                },
+                vAxis: {
+                    title: "Number of students"
+                },
+                series: {
+                    1: { curveType: 'Function' }
+                }
+            }
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(data, options);
         }
     </script>
