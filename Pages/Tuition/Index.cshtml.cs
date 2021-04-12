@@ -52,22 +52,6 @@ namespace LMS.Pages.Tuition
         public string Year { get; set; }
 
         public int cost {get;set;}
-        
-        [BindProperty]
-        public LMS.Models.Submission Submission { get; set; }
-
-        public Assignment Assignment {get; set;}
-
-        public int one;
-        public int two;
-        public int three;
-        public int four;
-        public int five;
-        public int six;
-        public int seven;
-        
-        public int placeholder;
-        public int points;
 
         public async Task OnGetAsync()
         {
@@ -75,13 +59,6 @@ namespace LMS.Pages.Tuition
             User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
 
             Amount = 100;
-            one = 0;
-            two = 0;
-            three = 0;
-            four = 0;
-            five = 0;
-            six = 0;
-            seven = 0;
 
             var courses = from c in _context.Course
                           join r in _context.Registration on c.ID equals r.Course
@@ -106,40 +83,6 @@ namespace LMS.Pages.Tuition
                 cost += item.CreditHours * 100;
             }
             cost = cost - User.Payment;
-
-            List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
-            SubmissionsByAssignment = _context.Submission.ToList();
-
-            foreach (var item in SubmissionsByAssignment)
-            {
-                Assignment = _context.Assignment.Where(u => u.ID == item.AssignmentID).FirstOrDefault();
-                points = Assignment.Points;
-                
-                if(item.Grade != "--"){
-                    placeholder = (Int32.Parse(item.Grade)/points)*100;
-                    if(placeholder >= 95){
-                        seven = seven + 1;
-                    }
-                    else if(placeholder >= 90){
-                        six = six + 1;
-                    }
-                    else if(placeholder >= 85){
-                        five = five + 1;
-                    }
-                    else if(placeholder >= 80){
-                        four = four + 1;
-                    }
-                    else if(placeholder >= 75){
-                        three = three + 1;
-                    }
-                    else if(placeholder >= 70){
-                        two = two + 1;
-                    }
-                    else if(placeholder < 70){
-                        one = one + 1;
-                    }
-                }
-            }
         }
 
             public async Task<IActionResult> OnPostAsync()

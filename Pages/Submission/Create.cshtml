@@ -64,34 +64,41 @@
     </div>
 </div>
 
+<div id = "container" style = "width: 550px; height: 400px; margin: 0 auto"> </div>
+
+<script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js"></script>
+<script type = "text/javascript">google.charts.load('current', {packages: ['corechart']}); </script>
+
+<script type="text/javascript">
+
+    function drawChart() {
+        // Define the chart to be drawn.
+        var data = google.visualization.arrayToDataTable([
+            ['Percentile', '', { role: 'style'}, { role: 'annotation' }],
+            ['<70',  @Model.one, '#FF0000', '@Html.Raw(Model.ann1)'],
+            ['70-75',  @Model.two, '#CC0033', '@Html.Raw(Model.ann2)'],
+            ['75-80',  @Model.three, '#990066', '@Html.Raw(Model.ann3)'],
+            ['80-85',  @Model.four, '#660099', '@Html.Raw(Model.ann4)'],
+            ['85-90',  @Model.five, '#3300CC', '@Html.Raw(Model.ann5)'],
+            ['90-95',  @Model.six, '#0000FF', '@Html.Raw(Model.ann6)'],
+            ['95-100',  @Model.seven, '#000080', '@Html.Raw(Model.ann7)']
+        ]);
+
+        var options = {
+        title: 'Average: @Model.average',
+        legend: {position: 'none'}
+        }; 
+
+        // Instantiate and draw the chart.
+        var chart = new google.visualization.ColumnChart(document.getElementById('container'));
+        chart.draw(data, options);
+     }
+    google.charts.setOnLoadCallback(drawChart);
+</script>
+
 <div id="chart_div" style="width: 900px; height: 500px;"></div>
 
 @section Scripts {
-    <script script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
-        var dataset = new [['Scores']];
-
-        @{ foreach (var item in Model.GradesByAssignment)
-            {
-            @: dataset = dataset[0].push(@item);
-            }
-        }
-
-        function drawChart()
-        {
-            var data = google.visualization.arrayToDataTable(dataset, true);
-
-        var options = {
-            legend: 'none'
-            };
-
-        var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-        }
-    </script>
-
     @*This j-query script updates the above label "custom-file-label" to read the file name you selected.*@
     <script>
         $(document).ready(function () {

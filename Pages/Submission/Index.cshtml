@@ -71,17 +71,20 @@
     function drawChart() {
         // Define the chart to be drawn.
         var data = google.visualization.arrayToDataTable([
-            ['Percentile', 'Temp'],
-            ['<70',  @Model.one],
-            ['70-75',  @Model.two],
-            ['75-80',  @Model.three],
-            ['80-85',  @Model.four],
-            ['85-90',  @Model.five],
-            ['90-95',  @Model.six],
-            ['95-100',  @Model.seven]
+            ['Percentile', '', { role: 'style'}, { role: 'annotation' }],
+            ['<70',  @Model.one, '#FF0000', ''],
+            ['70-75',  @Model.two, '#CC0033', ''],
+            ['75-80',  @Model.three, '#990066', ''],
+            ['80-85',  @Model.four, '#660099', ''],
+            ['85-90',  @Model.five, '#3300CC', ''],
+            ['90-95',  @Model.six, '#0000FF', ''],
+            ['95-100',  @Model.seven, '#000080', '']
         ]);
 
-        var options = {title: 'Grade Scale'}; 
+        var options = {
+        title: 'Average: @Model.average',
+        legend: {position: 'none'}
+        }; 
 
         // Instantiate and draw the chart.
         var chart = new google.visualization.ColumnChart(document.getElementById('container'));

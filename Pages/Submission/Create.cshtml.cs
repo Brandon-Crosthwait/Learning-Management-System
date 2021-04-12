@@ -33,8 +33,6 @@ namespace LMS.Pages.Submission
 
         public Department Department { get; set; }
 
-        public List<int> GradesByAssignment { get; set; }
-
         [BindProperty]
         public LMS.Models.Submission Submission { get; set; }
 
@@ -57,6 +55,26 @@ namespace LMS.Pages.Submission
         public IFormFile File { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
+
+        public int one;
+        public int two;
+        public int three;
+        public int four;
+        public int five;
+        public int six;
+        public int seven;
+        public double average;
+        public int scount;
+        public double placeholder;
+
+        public string ann1;
+        public string ann2;
+        public string ann3;
+        public string ann4;
+        public string ann5;
+        public string ann6;
+        public string ann7;
+
         public IActionResult OnGet()
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
@@ -69,17 +87,6 @@ namespace LMS.Pages.Submission
 
             List<LMS.Models.Submission> SubmissionsByAssignment = new List<LMS.Models.Submission>();
             SubmissionsByAssignment = _context.Submission.Where(u => u.AssignmentID == AssignmentID).ToList();
-            //GradesByAssignment = SubmissionsByAssignment.Select(s => int.Parse(s.Grade)).ToList();
-            GradesByAssignment = new List<int>();
-
-            foreach(var item in SubmissionsByAssignment)
-            {
-                if (item.Grade != "--")
-                {
-                    int score = Int32.Parse(item.Grade);
-                    GradesByAssignment.Add(score);
-                }
-            }
 
             Submitted = false;
 
@@ -100,6 +107,33 @@ namespace LMS.Pages.Submission
                 {
                     Submitted = true;
                     Submission = submission;
+
+                    Assignment = _context.Assignment.Where(u => u.ID == Submission.AssignmentID).FirstOrDefault();
+
+                    if(Submission.Grade != "--"){
+                        placeholder = ((double.Parse(Submission.Grade)/Assignment.Points)*100);
+                        if(placeholder >= 95){
+                            ann7 = "▇";
+                        }
+                        else if(placeholder >= 90){
+                            ann6 = "▇";
+                        }
+                        else if(placeholder >= 85){
+                            ann5 = "▇";
+                        }
+                        else if(placeholder >= 80){
+                            ann4 = "▇";
+                        }
+                        else if(placeholder >= 75){
+                            ann3 = "▇";
+                        }
+                        else if(placeholder >= 70){
+                            ann2 = "▇";
+                        }
+                        else if(placeholder < 70){
+                            ann1 = "▇";
+                        }
+                    }
                     break;
                 }
                 else
@@ -107,6 +141,51 @@ namespace LMS.Pages.Submission
                     Submitted = false;
                 }
             }
+
+            one = 0;
+            two = 0;
+            three = 0;
+            four = 0;
+            five = 0;
+            six = 0;
+            seven = 0;
+            average = 0;
+            scount = 0;
+
+            foreach (var item in SubmissionsByAssignment)
+            {
+                Assignment = _context.Assignment.Where(u => u.ID == item.AssignmentID).FirstOrDefault();
+                
+                if(item.Grade != "--"){
+                    placeholder = ((double.Parse(item.Grade)/Assignment.Points)*100);
+                    average = average + placeholder;
+                    scount = scount + 1;
+
+                    if(placeholder >= 95){
+                        seven = seven + 1;
+                    }
+                    else if(placeholder >= 90){
+                        six = six + 1;
+                    }
+                    else if(placeholder >= 85){
+                        five = five + 1;
+                    }
+                    else if(placeholder >= 80){
+                        four = four + 1;
+                    }
+                    else if(placeholder >= 75){
+                        three = three + 1;
+                    }
+                    else if(placeholder >= 70){
+                        two = two + 1;
+                    }
+                    else if(placeholder < 70){
+                        one = one + 1;
+                    }
+                }
+
+            }
+            average = Math.Round((average / scount), 2);
 
             return Page();
         }
