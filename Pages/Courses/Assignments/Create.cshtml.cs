@@ -86,6 +86,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
                     };
                     _context.Notification.Add(notification);
             }
+            await _context.SaveChangesAsync();
         }
     }
 }
