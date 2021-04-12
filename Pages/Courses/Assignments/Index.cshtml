@@ -8,6 +8,11 @@
 
 <h1>@pageTitle - @Model.Course.Name</h1>
 
+@if (!Model.BoolInstructor)
+            {
+                <h2>Grade: @Model.Registration.Grade</h2>
+            }
+
 <p>
     <h2>Assignments</h2>
 </p>

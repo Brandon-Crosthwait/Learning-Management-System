@@ -193,12 +193,12 @@ namespace LMS.Pages.Submission
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public IActionResult OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
             AssignmentID = (int)HttpContext.Session.GetInt32("currAssignment");
 
-            SubmitAssignment(StudentID, AssignmentID);
+            await SubmitAssignment(StudentID, AssignmentID);
             return Page();
         }
 
