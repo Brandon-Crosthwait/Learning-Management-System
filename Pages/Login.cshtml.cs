@@ -34,20 +34,8 @@ namespace LMS.Pages
             var userRecord = _context.User.Where(u => u.Email == Username).FirstOrDefault();
 
             if (userRecord != null && Password != null)
-            {
-                // Grab user's salt and store in byte array
-                byte[] salt = Convert.FromBase64String(userRecord.Salt);
-
-                // Hash the user entered password
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: Password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8));
-
-                // Check if hashed user entered password matches the user account password
-                if (userRecord.Password == hashed)
+            {   
+                if (moveToHome(userRecord.Salt, userRecord.Password, Password))
                 {
                     HttpContext.Session.SetInt32("userID", userRecord.ID);
                     HttpContext.Session.SetString("userFirstName", userRecord.FirstName);
@@ -66,5 +54,31 @@ namespace LMS.Pages
             }
 
         }
+
+        public bool moveToHome(string Salt, string Password, string unHashed){    
+            // Grab user's salt and store in byte array
+                byte[] salt = Convert.FromBase64String(Salt);
+                
+                bool condition = false; 
+                // Hash the user entered password
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: unHashed,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+
+                // Check if hashed user entered password matches the user account password
+                if (Password == hashed)
+                {
+                    condition = true;
+                }
+                else
+                {
+                    condition = false;
+                }
+
+                return condition;
+         }
     }
 }

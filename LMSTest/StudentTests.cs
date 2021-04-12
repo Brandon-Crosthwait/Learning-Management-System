@@ -234,5 +234,31 @@ namespace LMSTest
                 temp = i;
             }
         }
+
+        [TestMethod]
+        public async Task LoginTest()
+            {
+                /** Arrange **/
+                var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+                LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+
+                var pageModel = new LMS.Pages.LoginModel(context){};
+
+                /** Act **/
+                string salt = "gvR9ERGfxo1gct8v3kHctg==";
+                string password = "n+DqG5V5oHD8D1gGn3Y7eRIVwcLoSR8m8B6llcxfvJk=";
+                string unhashed = "11111111";
+
+                // moveToHome(string Salt, string Password, int ID, string unHashed)
+                bool condition = pageModel.moveToHome(salt, password, unhashed);
+                if (condition)
+                {
+                    Assert.IsTrue(true);
+                }
+                else
+                {
+                    Assert.IsTrue(false);
+                }
+            }
     }
 }
