@@ -48,6 +48,11 @@ namespace LMS.Pages
         public List<Assignment> AssignmentList { get; set; }
 
         /// <summary>
+        /// A list of notification objects.
+        /// </summary>
+        public List<Notification> NotificationList { get; set; }
+
+        /// <summary>
         /// Secondary list of Assignment objects
         /// </summary>
         public List<Assignment> Assignments { get; set; }
@@ -72,149 +77,23 @@ namespace LMS.Pages
                 }
                 else
                 {
-                    //Stores boolean string for whether the user is an instructor or student
                     string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
 
-                    /*** Populate instructor cards ***/
-
-                    //Pulls data for cards
-                    if (IsInstructor == "True")  //User is an instructor
+                    if (IsInstructor == "True")
                     {
-                        //LinQ statement to filter data in db
-                        var courses = from c in _context.Course
-                                      join d in _context.Department on c.Department equals d.ID.ToString()
-                                      where c.InstructorID == UserID
+                        await PopulateInstructorCards();
 
-                                      select new Course
-                                      {
-                                          ID = c.ID,
-                                          Number = c.Number,
-                                          Name = c.Name,
-                                          Instructor = c.Instructor,
-                                          Location = c.Location,
-                                          Days = c.Days,
-                                          Time = c.Time,
-                                          Department = d.Code
-                                      };
+                        PopulateInstructorToDoList();
 
-                        CourseList = await courses.ToListAsync();
-
-                        var assignments = from c in _context.Course
-                                      join d in _context.Department on c.Department equals d.ID.ToString()
-                                      join a in _context.Assignment on c.ID equals a.CourseID
-                                      where c.InstructorID == UserID
-                                      select new Assignment{
-                                          ID = a.ID,
-                                          Title = a.Title,
-                                          Points = a.Points,
-                                          Description = a.Description,
-                                          Due = a.Due,
-                                          SubmissionType = a.SubmissionType,
-                                          CourseID = c.ID
-                                      };
-                        Assignments = await assignments.ToListAsync();
-
-                        /*** Populate instructor to-do list ***/
-
-                        List<Assignment> assignmentRecords;
-
-                        List<Course> courseRecords;
-
-                        AssignmentList = new List<Assignment>();
-
-                        //Pulls records from db
-                        courseRecords = _context.Course.Where(c => c.InstructorID == UserID).ToList();
-                        assignmentRecords = _context.Assignment.ToList();
-
-                        //Finds assignments for instructor courses
-                        foreach (Course course in courseRecords)
-                        {
-                            foreach (Assignment assignment in assignmentRecords)
-                            {
-                                if (course.ID == assignment.CourseID)
-                                {
-                                    AssignmentList.Add(assignment);
-                                }
-                            }
-                        }
-
-                        OrderAssignments();
-
-                        RetrieveCourseInformation(courseRecords);
+                        PopulateInstructorNotifications();
                     }
                     else  //User is a student
                     {
-                        /*** Populate student cards ***/
+                        await PopulateStudentCards();
 
-                        var courses = from c in _context.Course
-                                      join d in _context.Department on c.Department equals d.ID.ToString()
-                                      join r in _context.Registration on c.ID equals r.Course
-                                      where r.Student == UserID
+                        PopulateStudentToDoList();
 
-                                      select new Course
-                                      {
-                                          ID = c.ID,
-                                          Number = c.Number,
-                                          Name = c.Name,
-                                          Instructor = c.Instructor,
-                                          Location = c.Location,
-                                          Days = c.Days,
-                                          Time = c.Time,
-                                          Department = d.Code
-                                      };
-
-                        CourseList = await courses.ToListAsync();
-
-                        var assignments = from c in _context.Course
-                                      join d in _context.Department on c.Department equals d.ID.ToString()
-                                      join r in _context.Registration on c.ID equals r.Course
-                                      join a in _context.Assignment on c.ID equals a.CourseID
-                                      where r.Student == UserID
-                                      select new Assignment{
-                                          ID = a.ID,
-                                          Title = a.Title,
-                                          Points = a.Points,
-                                          Description = a.Description,
-                                          Due = a.Due,
-                                          SubmissionType = a.SubmissionType,
-                                          CourseID = c.ID
-                                      };
-                        Assignments = await assignments.ToListAsync();
-
-                        /*** Populate student to-do list ***/
-
-                        List<Assignment> assignmentRecords;
-
-                        List<Registration> registrationRecords;
-
-                        AssignmentList = new List<Assignment>();
-
-                        //Pulls records from db
-                        registrationRecords = _context.Registration.Where(r => r.Student == UserID).ToList();
-                        assignmentRecords = _context.Assignment.ToList();
-
-                        //Finds assignments for student
-                        foreach (LMS.Models.Registration record in registrationRecords)
-                        {
-                            if (record.Student == UserID)  //Student is enrolled in course
-                            {
-                                foreach (Assignment assignment in assignmentRecords)
-                                {
-                                    if (assignment.CourseID == record.Course) //Assignment is assigned to course
-                                    {
-                                        AssignmentList.Add(assignment);
-                                    }
-                                }
-
-                            }
-                        }
-
-                        OrderAssignments();
-
-                        List<Course> courseRecords;
-                        courseRecords = _context.Course.ToList();
-
-                        RetrieveCourseInformation(courseRecords);
+                        PopulateStudentNotifications();
                     }
                     return Page();
                 }
@@ -225,36 +104,192 @@ namespace LMS.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostAsync(int course, int assignment)
+        /// <summary>
+        /// Pulls instructor assignments from the db and displays each assignment in the to-do list
+        /// </summary>
+        private void PopulateInstructorToDoList()
         {
-            string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+            List<Assignment> assignmentRecords;
 
-            // User clicks on Course card and is sent to Assignments page for that Course
-            if (course != 0)
+            List<Course> courseRecords;
+
+            AssignmentList = new List<Assignment>();
+
+            //Pulls records from db
+            courseRecords = _context.Course.Where(c => c.InstructorID == UserID).ToList();
+            assignmentRecords = _context.Assignment.ToList();
+
+            //Finds assignments for instructor courses
+            foreach (Course course in courseRecords)
             {
-                HttpContext.Session.SetInt32("currCourse", course);
-
-                return new RedirectToPageResult("./Courses/Assignments/Index");
-            }
-
-            // User clicks on ToDo List item and is sent to the Submission page for that Assignment
-            if (assignment != 0)
-            {
-                HttpContext.Session.SetInt32("currAssignment", assignment);
-
-                // If Student, the User is sent to Submission/Create
-                // If Instructor, the User is sent to the list of Submissions for Assignment
-                if (IsInstructor == "False")
+                foreach (Assignment assignment in assignmentRecords)
                 {
-                    return new RedirectToPageResult("./Submission/Create");
-                }
-                else
-                {
-                    return new RedirectToPageResult("./Submission/Index");
+                    if (course.ID == assignment.CourseID)
+                    {
+                        AssignmentList.Add(assignment);
+                    }
                 }
             }
 
-            return new RedirectToPageResult("/UserHome");
+            OrderAssignments();
+
+            RetrieveCourseInformation(courseRecords);
+        }
+
+        /// <summary>
+        /// Pulls instructor courses from the db and displays each course on cards
+        /// </summary>
+        /// <returns>Task</returns>
+        private async Task PopulateInstructorCards()
+        {
+            //LinQ statement to filter data in db
+            var courses = from c in _context.Course
+                          join d in _context.Department on c.Department equals d.ID.ToString()
+                          where c.InstructorID == UserID
+
+                          select new Course
+                          {
+                              ID = c.ID,
+                              Number = c.Number,
+                              Name = c.Name,
+                              Instructor = c.Instructor,
+                              Location = c.Location,
+                              Days = c.Days,
+                              Time = c.Time,
+                              Department = d.Code
+                          };
+
+            CourseList = await courses.ToListAsync();
+
+            var assignments = from c in _context.Course
+                              join d in _context.Department on c.Department equals d.ID.ToString()
+                              join a in _context.Assignment on c.ID equals a.CourseID
+                              where c.InstructorID == UserID
+                              select new Assignment
+                              {
+                                  ID = a.ID,
+                                  Title = a.Title,
+                                  Points = a.Points,
+                                  Description = a.Description,
+                                  Due = a.Due,
+                                  SubmissionType = a.SubmissionType,
+                                  CourseID = c.ID
+                              };
+            Assignments = await assignments.ToListAsync();
+        }
+
+        private async Task PopulateInstructorNotifications()
+        {
+            NotificationList = new List<Notification>();
+            NotificationList = _context.Notification.Where(n => n.StudentID == UserID).ToList();
+
+            if (NotificationList.Count > 2)
+            {
+                NotificationList.RemoveRange(2, (NotificationList.Count - 2));
+            }
+        }
+
+        /// <summary>
+        /// Pulls student courses from the db and displays each course on cards
+        /// </summary>
+        /// <returns>Task</returns>
+        private async Task PopulateStudentCards()
+        {
+            var courses = from c in _context.Course
+                          join d in _context.Department on c.Department equals d.ID.ToString()
+                          join r in _context.Registration on c.ID equals r.Course
+                          where r.Student == UserID
+
+                          select new Course
+                          {
+                              ID = c.ID,
+                              Number = c.Number,
+                              Name = c.Name,
+                              Instructor = c.Instructor,
+                              Location = c.Location,
+                              Days = c.Days,
+                              Time = c.Time,
+                              Department = d.Code
+                          };
+
+            CourseList = await courses.ToListAsync();
+
+            var assignments = from c in _context.Course
+                              join d in _context.Department on c.Department equals d.ID.ToString()
+                              join r in _context.Registration on c.ID equals r.Course
+                              join a in _context.Assignment on c.ID equals a.CourseID
+                              where r.Student == UserID
+                              select new Assignment
+                              {
+                                  ID = a.ID,
+                                  Title = a.Title,
+                                  Points = a.Points,
+                                  Description = a.Description,
+                                  Due = a.Due,
+                                  SubmissionType = a.SubmissionType,
+                                  CourseID = c.ID
+                              };
+            Assignments = await assignments.ToListAsync();
+        }
+
+        /// <summary>
+        /// Pulls student assignments from the db and displays each assignment in the to-do list
+        /// </summary>
+        private void PopulateStudentToDoList()
+        {
+            List<Assignment> assignmentRecords;
+
+            List<Registration> registrationRecords;
+
+            AssignmentList = new List<Assignment>();
+
+            //Pulls records from db
+            registrationRecords = _context.Registration.Where(r => r.Student == UserID).ToList();
+            assignmentRecords = _context.Assignment.ToList();
+
+            //Finds assignments for student
+            foreach (LMS.Models.Registration record in registrationRecords)
+            {
+                if (record.Student == UserID)  //Student is enrolled in course
+                {
+                    foreach (Assignment assignment in assignmentRecords)
+                    {
+                        if (assignment.CourseID == record.Course) //Assignment is assigned to course
+                        {
+                            AssignmentList.Add(assignment);
+                        }
+                    }
+
+                }
+            }
+
+            OrderAssignments();
+
+            List<Course> courseRecords;
+            courseRecords = _context.Course.ToList();
+
+            RetrieveCourseInformation(courseRecords);
+        }
+
+        /// <summary>
+        /// Pulls student notifications from the db and stores each notification in the notificaiton box
+        /// </summary>
+        private void PopulateStudentNotifications()
+        {
+            NotificationList = new List<Notification>();
+            NotificationList = _context.Notification.Where(n => n.StudentID == UserID).ToList();
+
+            if (NotificationList.Count > 2)
+            {
+                NotificationList.RemoveRange(2, (NotificationList.Count - 2));
+            }
+
+            if (NotificationList.Count == 0)
+            {
+                Notification notification = new Notification();
+                notification.Message = "No new notifications.";
+                NotificationList.Add(notification);
+            }
         }
 
         /// <summary>
@@ -307,6 +342,38 @@ namespace LMS.Pages
             {
                 AssignmentList.RemoveRange(5, (AssignmentList.Count - 5));
             }
+        }
+
+        public async Task<IActionResult> OnPostAsync(int course, int assignment)
+        {
+            string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+
+            // User clicks on Course card and is sent to Assignments page for that Course
+            if (course != 0)
+            {
+                HttpContext.Session.SetInt32("currCourse", course);
+
+                return new RedirectToPageResult("./Courses/Assignments/Index");
+            }
+
+            // User clicks on ToDo List item and is sent to the Submission page for that Assignment
+            if (assignment != 0)
+            {
+                HttpContext.Session.SetInt32("currAssignment", assignment);
+
+                // If Student, the User is sent to Submission/Create
+                // If Instructor, the User is sent to the list of Submissions for Assignment
+                if (IsInstructor == "False")
+                {
+                    return new RedirectToPageResult("./Submission/Create");
+                }
+                else
+                {
+                    return new RedirectToPageResult("./Submission/Index");
+                }
+            }
+
+            return new RedirectToPageResult("/UserHome");
         }
     }
 }

@@ -50,6 +50,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             Assignment.CourseID = Course.ID;
 
             _context.Assignment.Add(Assignment);
+
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

@@ -75,6 +75,9 @@ namespace LMS.Pages.Submission
 
             Submission.Grade = Grade;
 
+            //Stores notification in db
+            await AddGradedNotification();
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -92,6 +95,28 @@ namespace LMS.Pages.Submission
             }
 
             return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// Adds a notification when an instructor grades an assignment
+        /// </summary>
+        /// <returns>Task</returns>
+        private async Task AddGradedNotification()
+        {
+            Assignment assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.ID == Submission.AssignmentID);
+            Course course = await _context.Course.FirstOrDefaultAsync(c => c.ID == assignment.CourseID);
+            Department department = await _context.Department.FirstOrDefaultAsync(d => d.ID == Int32.Parse(course.Department));
+
+            string message = department.Code + " " + course.Number + " - " + assignment.Title + " has been graded.";
+
+            Notification notification = new Notification()
+            {
+                StudentID = Submission.StudentID,
+                AssignmentID = Submission.AssignmentID,
+                Message = message,
+            };
+
+            _context.Notification.Add(notification);
         }
 
         private bool SubmissionExists(int id)

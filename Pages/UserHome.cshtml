@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model LMS.Pages.UserHomeModel
 @{
     ViewData["Title"] = "User Home";
@@ -12,77 +13,84 @@
 <div class="card-container">
     @foreach (var item in Model.CourseList)
     {
-    <form asp-page-handler="view" method="post">
-        <input type="hidden" name="course" value="@item.ID" />
-        <button type="submit">
-            <div class="card">
-                <div class="card-title">
-                    <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
-                    <h5>@Html.DisplayFor(model => item.Name)</h5>
+        <form asp-page-handler="view" method="post">
+            <input type="hidden" name="course" value="@item.ID" />
+            <button type="submit">
+                <div class="card">
+                    <div class="card-title">
+                        <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
+                        <h5>@Html.DisplayFor(model => item.Name)</h5>
+                    </div>
+                    <div class="card-info">
+                        <h5>Instructor:</h5>
+                        <h6>@Html.DisplayFor(model => item.Instructor)</h6>
+                        <h5>Meeting Location:</h5>
+                        <h6>@Html.DisplayFor(model => item.Location)</h6>
+                        <h5>Meeting Day/Time:</h5>
+                        <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
+                    </div>
                 </div>
-                <div class="card-info">
-                    <h5>Instructor:</h5>
-                    <h6>@Html.DisplayFor(model => item.Instructor)</h6>
-                    <h5>Meeting Location:</h5>
-                    <h6>@Html.DisplayFor(model => item.Location)</h6>
-                    <h5>Meeting Day/Time:</h5>
-                    <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
-                </div>
-            </div>
-        </button>
-
-    </form>
-
-                }
-    </div>
-
-
-<div id="notification">
-    <ul class="notification-list">
-        <li>
-            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;This is a notification</p>
-            <i class="fa fa-times clear" aria-hidden="true"></i>
-        </li>
-        <li>
-            <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;Second notification</p>
-            <i class="fa fa-times clear" aria-hidden="true"></i>
-        </li>
-    </ul>
+            </button>
+        </form>
+    }
 </div>
+
+@{
+    string isInstructor = HttpContext.Session.GetString("isInstructorSession");
+    if (isInstructor != "True")
+    {
+        <div id="notification">
+            <ul class="notification-list">
+                <li>
+                    <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;@Model.NotificationList[0].Message</p>
+                    <i class="fa fa-times clear" aria-hidden="true"></i>
+                </li>
+                @{ if (Model.NotificationList.Count > 1)
+                    {
+                    <li>
+                        <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;@Model.NotificationList[1].Message</p>
+                        <i class="fa fa-times clear" aria-hidden="true"></i>
+                    </li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+}
 
 
 <div id="todo">
     <h3 class="todo-title">To Do</h3>
-        @for (int i = 0; i < Model.AssignmentList.Count; i++)
-        {
-            <form asp-page-handler="view" method="post">
-                <input type="hidden" name="assignment" value="@Model.AssignmentList[i].ID" />
-                <button type="submit" class="btn btn-link text-left text-secondary">
-                    <span class="todo-item">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true">
-                            &emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
-                            <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)
-                        </i>
-                    </span>
-                </button>
-            </form>
-        }
- </div>
+    @for (int i = 0; i < Model.AssignmentList.Count; i++)
+    {
+        <form asp-page-handler="view" method="post">
+            <input type="hidden" name="assignment" value="@Model.AssignmentList[i].ID" />
+            <button type="submit" class="btn btn-link text-left text-secondary">
+                <span class="todo-item">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true">
+                        &emsp;@Html.DisplayFor(modelItem => Model.CourseInfo[i]): @Html.DisplayFor(modelItem => Model.AssignmentList[i].Title)
+                        <br>@Html.DisplayFor(modelItem => Model.AssignmentList[i].Due)
+                    </i>
+                </span>
+            </button>
+        </form>
+    }
+</div>
 
 
- <div id='calendar'></div>
+<div id='calendar'></div>
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+                    var calendarEl = document.getElementById('calendar');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridWeek',
       height: 225,
       nextDayThreshold: '24:00:00',
       events: [
           @{if (Model.Assignments.Count > 0)
-              {
-                  var lastItem = Model.Assignments.Last();
+                        {
+                            var lastItem = Model.Assignments.Last();
                             @foreach (var item in Model.Assignments) {
                     @:{
                         @: title: ('@item.Title.ToString()'),
