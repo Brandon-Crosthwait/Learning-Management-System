@@ -13,14 +13,14 @@
     @foreach (var item in Model.CourseList)
     {
     <form asp-page-handler="view" method="post">
-        <input type="hidden" name="course" value="@item.ID" />
+        <input type="hidden" name="course" value="@item.ID" style="border:none"/>
         <button type="submit">
             <div class="card">
-                <div class="card-title">
+                <div>
                     <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
                     <h5>@Html.DisplayFor(model => item.Name)</h5>
                 </div>
-                <div class="card-info">
+                <div>
                     <h5>Instructor:</h5>
                     <h6>@Html.DisplayFor(model => item.Instructor)</h6>
                     <h5>Meeting Location:</h5>
