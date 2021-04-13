@@ -316,7 +316,7 @@ namespace LMS.Pages
         /// <summary>
         /// Orders a list of assignments by due date
         /// </summary>
-        private void OrderAssignments()
+        public void OrderAssignments()
         {
             DateTime currentDateTime = DateTime.Now;
 

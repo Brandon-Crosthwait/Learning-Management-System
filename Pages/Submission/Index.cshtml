@@ -60,3 +60,35 @@
 }
     </tbody>
 </table>
+
+<div id = "container" style = "width: 550px; height: 400px; margin: 0 auto"> </div>
+
+<script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js"></script>
+<script type = "text/javascript">google.charts.load('current', {packages: ['corechart']}); </script>
+
+<script type="text/javascript">
+
+    function drawChart() {
+        // Define the chart to be drawn.
+        var data = google.visualization.arrayToDataTable([
+            ['Percentile', '', { role: 'style'}, { role: 'annotation' }],
+            ['<70',  @Model.one, '#FF0000', ''],
+            ['70-75',  @Model.two, '#CC0033', ''],
+            ['75-80',  @Model.three, '#990066', ''],
+            ['80-85',  @Model.four, '#660099', ''],
+            ['85-90',  @Model.five, '#3300CC', ''],
+            ['90-95',  @Model.six, '#0000FF', ''],
+            ['95-100',  @Model.seven, '#000080', '']
+        ]);
+
+        var options = {
+        title: 'Average: @Model.average',
+        legend: {position: 'none'}
+        }; 
+
+        // Instantiate and draw the chart.
+        var chart = new google.visualization.ColumnChart(document.getElementById('container'));
+        chart.draw(data, options);
+     }
+    google.charts.setOnLoadCallback(drawChart);
+</script>

@@ -24,6 +24,9 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         [BindProperty]
         public Course Course { get; set; }
 
+        [BindProperty]
+        public Assignment Assignment { get; set; }
+
         public SelectList SubmissionList { get; set; }
 
         public IActionResult OnGet()
@@ -38,13 +41,18 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             return Page();
         }
 
-        [BindProperty]
-        public Assignment Assignment { get; set; }
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             int courseID = (int)HttpContext.Session.GetInt32("currCourse");
+
+            await CreateAssignment(courseID);
+
+            return RedirectToPage("./Index");
+        }
+
+        public async Task CreateAssignment(int courseID)
+        {
             int userID = (int)HttpContext.Session.GetInt32("userID");
 
             Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);
@@ -54,10 +62,6 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
             _context.Assignment.Add(Assignment);
 
             await _context.SaveChangesAsync();
-
-            await AddAssignmentCreatedNotification(userID);
-
-            return RedirectToPage("./Index");
         }
 
         /// <summary>

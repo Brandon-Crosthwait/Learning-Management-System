@@ -14,35 +14,6 @@ namespace LMSTest
     public class InstructorTests
     {
         [TestMethod]
-        public void StudentRegisterCourse()
-        {
-            /** Arrange **/
-            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
-            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
-            int userID = 1010;
-
-            var pageModel = new LMS.Pages.Registrations.IndexModel(context)
-            {
-                UserID = userID,
-                Registration = new Registration(),
-            };
-
-            /** Act **/
-            List<Registration> registrationRecords;
-            registrationRecords = context.Registration.Where(r => r.Student == userID).ToList();
-            int preCount = registrationRecords.Count();
-
-            int courseID = 10;
-            pageModel.AddCourse(courseID);
-
-            registrationRecords = context.Registration.Local.Where(r => r.Student == userID).ToList();
-            int postCount = registrationRecords.Count();
-
-            /** Compare **/
-            Assert.AreNotEqual(preCount, postCount);
-        }
-
-        [TestMethod]
         public async Task CourseCreateTest()
         {
             // Arrange
@@ -88,6 +59,73 @@ namespace LMSTest
             // Cleanup
             _context.Course.Remove(insertCourse);
             _context.SaveChanges();
+        }
+
+        [TestMethod]
+        public async Task AssignmentCreateTest()
+        {
+            /** Arrange **/
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+            int userID = 1007;
+            int courseID = 6;
+
+            Assignment TestAssignment = new Assignment();
+            TestAssignment.Title = "UnitTestAssignment1001";
+            TestAssignment.Points = 30;
+            TestAssignment.Description = "Unit Tests / InstructorTests / AssignmentCreateTest";
+            TestAssignment.Due = DateTime.Parse("2021-04-28 23:59:00");
+            TestAssignment.SubmissionType = "File Upload";
+
+            var pageModel = new LMS.Pages.Courses.CourseInfo.Assignments.CreateModel(context)
+            {
+                Assignment = TestAssignment
+            };
+
+            /** Act **/
+            List<Assignment> assignmentRecords;
+            assignmentRecords = context.Assignment.Where(a => a.CourseID == courseID).ToList();
+            int preCount = assignmentRecords.Count();
+
+            await pageModel.CreateAssignment(courseID);
+
+            assignmentRecords = context.Assignment.Local.Where(a => a.CourseID == courseID).ToList();
+            int postCount = assignmentRecords.Count();
+
+            /** Compare **/
+            Assert.AreNotEqual(preCount, postCount);
+
+            /** Cleanup **/
+            var newAssignment = context.Assignment.FirstOrDefault(a => a.CourseID == courseID && a.Title == TestAssignment.Title);
+            context.Assignment.Remove(newAssignment);
+            context.SaveChanges();
+        }
+
+        [TestMethod]
+        public async Task GradeAssignmentTest()
+        {
+            /** Arrange **/
+            var optionsBuilder = new DbContextOptionsBuilder<LMSContext>().UseSqlServer("Data Source=titan.cs.weber.edu,10433;Initial Catalog=LMS_BLUE;User ID=LMS_BLUE;Password=BTlms2021!");
+            LMS.Data.LMSContext context = new LMSContext(optionsBuilder.Options);
+
+            LMS.Pages.Submission.EditModel model = new LMS.Pages.Submission.EditModel(context);
+            int submissionID = 138; 
+            string grade = "10";
+            var submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
+
+            /** Act **/
+            await model.SubmitGrade(grade, submission);
+            submission = await context.Submission.FirstOrDefaultAsync(x => x.ID == submissionID);
+            var postValue = submission.Grade;
+
+            /** Compare **/
+            Assert.AreEqual("10", postValue);
+
+            /** Cleanup **/
+            await model.SubmitGrade("--", submission);
+
+
+
         }
 
         public void ConfigureServices(IServiceCollection services)

@@ -122,6 +122,7 @@ namespace LMS.Pages.Registrations
         {
             Registration.Course = course;
             Registration.Student = UserID;
+            Registration.Grade = 0;
             _context.Registration.Add(Registration);
         }
     }
