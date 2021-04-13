@@ -41,17 +41,12 @@
     {
         <div id="notification">
             <ul class="notification-list">
+                @foreach (var item in Model.NotificationList)
+                {
                 <li>
-                    <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;@Model.NotificationList[0].Message</p>
+                    <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;@Html.DisplayFor(model => item.Message)</p>
                     <i class="fa fa-times clear" aria-hidden="true"></i>
                 </li>
-                @{ if (Model.NotificationList.Count > 1)
-                    {
-                    <li>
-                        <p><i class="fa fa-exclamation" aria-hidden="true"></i>&emsp;@Model.NotificationList[1].Message</p>
-                        <i class="fa fa-times clear" aria-hidden="true"></i>
-                    </li>
-                    }
                 }
             </ul>
         </div>

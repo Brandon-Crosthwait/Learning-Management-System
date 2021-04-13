@@ -279,11 +279,6 @@ namespace LMS.Pages
             NotificationList = new List<Notification>();
             NotificationList = _context.Notification.Where(n => n.StudentID == UserID).ToList();
 
-            if (NotificationList.Count > 2)
-            {
-                NotificationList.RemoveRange(2, (NotificationList.Count - 2));
-            }
-
             if (NotificationList.Count == 0)
             {
                 Notification notification = new Notification();
