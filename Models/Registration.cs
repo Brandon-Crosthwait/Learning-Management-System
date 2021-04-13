@@ -16,5 +16,8 @@ namespace LMS.Models
         [Required]
         public int Student { get; set; }
 
+        [Required]
+        public double Grade { get; set; }
+
     }
 }

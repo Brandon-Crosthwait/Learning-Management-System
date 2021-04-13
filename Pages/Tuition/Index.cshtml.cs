@@ -89,39 +89,50 @@ namespace LMS.Pages.Tuition
             {
                 //grab user
                 UserID = (int)HttpContext.Session.GetInt32("userID");
-                User = _context.User.Where(u => u.ID == UserID).FirstOrDefault();
-                
-                //initalize httpClient
-                var httpClient = new HttpClient();
 
-                //Get Card Token
-                var token = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/tokens");
-                token.Headers.TryAddWithoutValidation("Authorization", "Bearer pk_test_51IV89XFlShtBVarWzUaU7rhtEQPlJi1wnxgTSOm2SZjuAIum2cc3oCuhEeL1FWTb2OzfjNo4fwZ6rDf98A3mlpkJ00DSY8nmLC"); 
-                token.Content = new StringContent("card[number]="+CardNumber+"&card[exp_month]="+Month+"&card[exp_year]="+Year+"&card[cvc]="+CVV);
-                token.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"); 
-                var response = await httpClient.SendAsync(token);
-                var contents = await response.Content.ReadAsStringAsync();
-
-                //If token is valid update payment in database
-                JObject tok = JObject.Parse(contents);
-                string tokenID = (string)tok["id"];
-                try{
-                    if(tokenID.StartsWith("tok")){
-                        User.Payment = User.Payment + Amount;
-                    }
-                }
-                catch{
-                    //payment not valid
-                }
-
-                //Make Charge
-                var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/charges");
-                request.Headers.TryAddWithoutValidation("Authorization", "Bearer sk_test_51IV89XFlShtBVarWOf9WuHB2ra8HWdm3jpXc6VsrKqzpLAHpZkyculiBARpDmSfQGxhSjNmi5s82U2I0Ly58aaau005UGfGipY");                     request.Content = new StringContent("amount="+Amount*100+"&currency=usd&source="+tokenID);
-                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"); 
-                var checkout = await httpClient.SendAsync(request);             
-                
-                await _context.SaveChangesAsync();
+                await processPayment(CardNumber, CVV, Month, Year, Amount, UserID);
+               
                 return RedirectToPage("./Index");
             }
+
+        public async Task processPayment(string CardNumber, string CVV, string Month, string Year, int Amount, int ID)
+        {
+            User = _context.User.Where(u => u.ID == ID).FirstOrDefault();
+
+            //initalize httpClient
+            var httpClient = new HttpClient();
+
+            //Get Card Token
+            var token = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/tokens");
+            token.Headers.TryAddWithoutValidation("Authorization", "Bearer pk_test_51IV89XFlShtBVarWzUaU7rhtEQPlJi1wnxgTSOm2SZjuAIum2cc3oCuhEeL1FWTb2OzfjNo4fwZ6rDf98A3mlpkJ00DSY8nmLC");
+            token.Content = new StringContent("card[number]=" + CardNumber + "&card[exp_month]=" + Month + "&card[exp_year]=" + Year + "&card[cvc]=" + CVV);
+            token.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+            var response = await httpClient.SendAsync(token);
+            var contents = await response.Content.ReadAsStringAsync();
+
+            //If token is valid update payment in database
+            JObject tok = JObject.Parse(contents);
+            string tokenID = (string)tok["id"];
+            try
+            {
+                if (tokenID.StartsWith("tok"))
+                {
+                    User.Payment = User.Payment + Amount;
+                }
+            }
+            catch
+            {
+                //payment not valid
+            }
+            User.Payment = User.Payment + Amount;
+
+            //Make Charge
+            var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/charges");
+            request.Headers.TryAddWithoutValidation("Authorization", "Bearer sk_test_51IV89XFlShtBVarWOf9WuHB2ra8HWdm3jpXc6VsrKqzpLAHpZkyculiBARpDmSfQGxhSjNmi5s82U2I0Ly58aaau005UGfGipY"); request.Content = new StringContent("amount=" + Amount * 100 + "&currency=usd&source=" + tokenID);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+            var checkout = await httpClient.SendAsync(request);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

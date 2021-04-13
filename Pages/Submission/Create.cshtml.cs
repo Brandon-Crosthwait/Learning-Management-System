@@ -55,6 +55,26 @@ namespace LMS.Pages.Submission
         public IFormFile File { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
+
+        public int one;
+        public int two;
+        public int three;
+        public int four;
+        public int five;
+        public int six;
+        public int seven;
+        public double average;
+        public int scount;
+        public double placeholder;
+
+        public string ann1;
+        public string ann2;
+        public string ann3;
+        public string ann4;
+        public string ann5;
+        public string ann6;
+        public string ann7;
+
         public IActionResult OnGet()
         {
             StudentID = (int)HttpContext.Session.GetInt32("userID");
@@ -87,6 +107,33 @@ namespace LMS.Pages.Submission
                 {
                     Submitted = true;
                     Submission = submission;
+
+                    Assignment = _context.Assignment.Where(u => u.ID == Submission.AssignmentID).FirstOrDefault();
+
+                    if(Submission.Grade != "--"){
+                        placeholder = ((double.Parse(Submission.Grade)/Assignment.Points)*100);
+                        if(placeholder >= 95){
+                            ann7 = "▇";
+                        }
+                        else if(placeholder >= 90){
+                            ann6 = "▇";
+                        }
+                        else if(placeholder >= 85){
+                            ann5 = "▇";
+                        }
+                        else if(placeholder >= 80){
+                            ann4 = "▇";
+                        }
+                        else if(placeholder >= 75){
+                            ann3 = "▇";
+                        }
+                        else if(placeholder >= 70){
+                            ann2 = "▇";
+                        }
+                        else if(placeholder < 70){
+                            ann1 = "▇";
+                        }
+                    }
                     break;
                 }
                 else
@@ -95,8 +142,54 @@ namespace LMS.Pages.Submission
                 }
             }
 
+            one = 0;
+            two = 0;
+            three = 0;
+            four = 0;
+            five = 0;
+            six = 0;
+            seven = 0;
+            average = 0;
+            scount = 0;
+
+            foreach (var item in SubmissionsByAssignment)
+            {
+                Assignment = _context.Assignment.Where(u => u.ID == item.AssignmentID).FirstOrDefault();
+                
+                if(item.Grade != "--"){
+                    placeholder = ((double.Parse(item.Grade)/Assignment.Points)*100);
+                    average = average + placeholder;
+                    scount = scount + 1;
+
+                    if(placeholder >= 95){
+                        seven = seven + 1;
+                    }
+                    else if(placeholder >= 90){
+                        six = six + 1;
+                    }
+                    else if(placeholder >= 85){
+                        five = five + 1;
+                    }
+                    else if(placeholder >= 80){
+                        four = four + 1;
+                    }
+                    else if(placeholder >= 75){
+                        three = three + 1;
+                    }
+                    else if(placeholder >= 70){
+                        two = two + 1;
+                    }
+                    else if(placeholder < 70){
+                        one = one + 1;
+                    }
+                }
+
+            }
+            average = Math.Round((average / scount), 2);
+
             return Page();
         }
+
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -105,49 +198,8 @@ namespace LMS.Pages.Submission
             StudentID = (int)HttpContext.Session.GetInt32("userID");
             AssignmentID = (int)HttpContext.Session.GetInt32("currAssignment");
 
-            Student = _context.User.Where(u => u.ID == StudentID).FirstOrDefault();
-            Assignment = _context.Assignment.Where(u => u.ID == AssignmentID).FirstOrDefault();
-            Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
-            Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
-
-            // Assign the student and assignment to the submission record
-            Submission.StudentID = StudentID;
-            Submission.AssignmentID = AssignmentID;
-            Submission.Grade = "--";
-
-            if (Assignment.SubmissionType == "File Upload")
-            {
-                // Assign the file to the submission record
-                if (File != null)
-                {
-                    if (Submission.Content != null)
-                    {
-                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
-                        "StudentSubmissions", Submission.Content);
-                        System.IO.File.Delete(filePath);
-                    }
-                    Submission.Content = ProcessUploadedFile(Student, Course, Department);
-
-                    _context.Submission.Add(Submission);
-                    await _context.SaveChangesAsync();
-
-                    HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
-                    return RedirectToPage("/Courses/Assignments/Index");
-                }
-                else
-                {
-                    return Page();
-                }
-            }
-            else
-            {
-                Submission.Content = Content;
-                _context.Submission.Add(Submission);
-                await _context.SaveChangesAsync();
-
-                HttpContext.Session.SetInt32("currCourse", Assignment.CourseID);
-                return RedirectToPage("/Courses/Assignments/Index");
-            }
+            await SubmitAssignment(StudentID, AssignmentID);
+            return Page();
         }
 
         private string ProcessUploadedFile(User Student, Course Course, Department Department)
@@ -173,6 +225,48 @@ namespace LMS.Pages.Submission
             }
 
             return filePath;
+        }
+
+        public async Task SubmitAssignment(int studentID, int assignmentID)
+        {
+            Student = _context.User.Where(u => u.ID == studentID).FirstOrDefault();
+            Assignment = _context.Assignment.Where(u => u.ID == assignmentID).FirstOrDefault();
+            Course = _context.Course.Where(u => u.ID == Assignment.CourseID).FirstOrDefault();
+            Department = _context.Department.Where(u => u.ID == Int32.Parse(Course.Department)).FirstOrDefault();
+
+            // Assign the student and assignment to the submission record
+            Submission.StudentID = studentID;
+            Submission.AssignmentID = assignmentID;
+            Submission.Grade = "--";
+
+            if (Assignment.SubmissionType == "File Upload")
+            {
+                // Assign the file to the submission record
+                if (File != null)
+                {
+                    if (Submission.Content != null)
+                    {
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath,
+                        "StudentSubmissions", Submission.Content);
+                        System.IO.File.Delete(filePath);
+                    }
+                    Submitted = true;
+                    Submission.Content = ProcessUploadedFile(Student, Course, Department);
+                    _context.Submission.Add(Submission);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                Submitted = true;
+                Submission.Content = Content;
+                _context.Submission.Add(Submission);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
