@@ -76,16 +76,28 @@ body {
 }
 
 .card {
-    margin: 5px;
-    width: 20em;
-    height: 20em;
+    margin: 1px;
+    width: 14em;
+    height: 16em;
     background-color: #3d3e4d;
     color: white;
+    padding-right: 13%;
+}
+
+.card-title {
+    list-style-type: none;
+    font-size: 95%;
+}
+
+.card-info {
+    list-style-type: none;
+    font-size: 90%;
 }
 
 .card-container {
     display: flex;
     flex-wrap: wrap;
+    margin-left: 18%;
 }
 
 /* User Home Page*/
@@ -135,10 +147,10 @@ body {
 
 /*To Do List*/
 #todo {
-    width: 250px;
+    width: 200px;
     text-align: left;
     position: absolute;
-    right: 50px;
+    left: 30px;
     top: 150px;
 }
 
@@ -159,6 +171,7 @@ body {
 
 .todo-item {
     color: #3d3e4d;
+    font-size: 75%;
 }
 
 .imageThumbnail {

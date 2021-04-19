@@ -17,18 +17,19 @@
             <input type="hidden" name="course" value="@item.ID" />
             <button type="submit">
                 <div class="card">
-                    <div class="card-title">
-                        <h4>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</h4>
-                        <h5>@Html.DisplayFor(model => item.Name)</h5>
-                    </div>
+                        <ul class="card-title">
+                            <li>@Html.DisplayFor(model => item.Department) @Html.DisplayFor(model => item.Number)</li>
+                            <li>@Html.DisplayFor(model => item.Name)</li>
+                        </ul>
                     <div class="card-info">
-                        <h5>Instructor:</h5>
-                        <h6>@Html.DisplayFor(model => item.Instructor)</h6>
-                        <h5>Meeting Location:</h5>
-                        <h6>@Html.DisplayFor(model => item.Location)</h6>
-                        <h5>Meeting Day/Time:</h5>
-                        <h6>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</h6>
-                    </div>
+                        <ul class="card-info">
+                            <li>Instructor:</li>
+                            <li>@Html.DisplayFor(model => item.Instructor)</li>
+                            <li>Meeting Location:</li>
+                            <li>@Html.DisplayFor(model => item.Location)</li>
+                            <li>Meeting Day/Time:</li>
+                            <li>@Html.DisplayFor(model => item.Days) @Html.DisplayFor(model => item.Time)</li>
+                        </ul>
                 </div>
             </button>
         </form>
