@@ -53,11 +53,43 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
         public async Task CreateAssignment(int courseID)
         {
+            int userID = (int)HttpContext.Session.GetInt32("userID");
+
             Course = await _context.Course.FirstOrDefaultAsync(m => m.ID == courseID);
 
             Assignment.CourseID = Course.ID;
 
             _context.Assignment.Add(Assignment);
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Creates a notification for when a new assignment is added to a course.
+        /// </summary>
+        /// <param name="userID">int userID</param>
+        /// <returns>Task</returns>
+        private async Task AddAssignmentCreatedNotification(int userID)
+        {
+            Course course = await _context.Course.FirstOrDefaultAsync(a => a.ID == Assignment.CourseID);
+            Department department = await _context.Department.FirstOrDefaultAsync(d => d.ID == Int32.Parse(course.Department));
+            Assignment assignment =  await _context.Assignment.FirstOrDefaultAsync(a => a.Description == Assignment.Description);
+
+            string message = "New assignment available: " + department.Code + " " + course.Number + " - " + Assignment.Title;
+
+            List<Registration> registrationRecords = new List<Registration>();
+            registrationRecords = _context.Registration.Where(r => r.Course == course.ID).ToList();
+
+            foreach (Registration registration in registrationRecords)
+            {
+                    Notification notification = new Notification()
+                    {
+                        StudentID = registration.Student,
+                        AssignmentID = assignment.ID,
+                        Message = message,
+                    };
+                    _context.Notification.Add(notification);
+            }
             await _context.SaveChangesAsync();
         }
     }

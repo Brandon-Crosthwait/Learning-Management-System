@@ -162,6 +162,7 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
         public async Task<IActionResult> OnPostAsync(int assignment)
         {
             string IsInstructor = HttpContext.Session.GetString("isInstructorSession");
+            //HttpContext.Session.SetInt32("UserID", StudentID);
 
             if (assignment != 0)
             {

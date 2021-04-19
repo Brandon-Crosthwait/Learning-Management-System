@@ -86,6 +86,11 @@ namespace LMS.Pages.Submission
             this.Submission = await _context.Submission.FirstOrDefaultAsync(x => x.ID == id);
             HttpContext.Session.SetInt32("currAssignment", Submission.AssignmentID);
 
+            Submission.Grade = Grade;
+
+            //Stores notification in db
+            await AddGradedNotification();
+
             try
             {
                 await this.SubmitGrade(Grade, this.Submission);
@@ -110,6 +115,28 @@ namespace LMS.Pages.Submission
         {
             submission.Grade = grade;
             await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Adds a notification when an instructor grades an assignment
+        /// </summary>
+        /// <returns>Task</returns>
+        private async Task AddGradedNotification()
+        {
+            Assignment assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.ID == Submission.AssignmentID);
+            Course course = await _context.Course.FirstOrDefaultAsync(c => c.ID == assignment.CourseID);
+            Department department = await _context.Department.FirstOrDefaultAsync(d => d.ID == Int32.Parse(course.Department));
+
+            string message = department.Code + " " + course.Number + " - " + assignment.Title + " has been graded.";
+
+            Notification notification = new Notification()
+            {
+                StudentID = Submission.StudentID,
+                AssignmentID = Submission.AssignmentID,
+                Message = message,
+            };
+
+            _context.Notification.Add(notification);
         }
 
         private bool SubmissionExists(int id)

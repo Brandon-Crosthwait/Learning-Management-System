@@ -86,9 +86,36 @@ namespace LMS.Pages.Registrations
             else
             {
                 AddCourse(course);
+
+                await AddAssignmentNotifications(course);
             }
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
+        }
+
+        private async Task AddAssignmentNotifications(int courseID)
+        {
+            Course course = await _context.Course.FirstOrDefaultAsync(c => c.ID == courseID);
+            Department department = await _context.Department.FirstOrDefaultAsync(d => d.ID == Int32.Parse(course.Department));
+            List<Assignment> assignmentRecords = new List<Assignment>();
+            assignmentRecords = _context.Assignment.Where(a => a.CourseID == course.ID).ToList();
+
+            foreach (Assignment assignment in assignmentRecords)
+            {
+                //Filters out old assignments
+                if (assignment.Due >= DateTime.Now)
+                {
+                    string message = "New assignment available: " + department.Code + " " + course.Number + " - " + assignment.Title;
+
+                    Notification notification = new Notification()
+                    {
+                        StudentID = UserID,
+                        AssignmentID = assignment.ID,
+                        Message = message,
+                    };
+                    _context.Notification.Add(notification);
+                }
+            }
         }
 
         public void AddCourse(int course)
