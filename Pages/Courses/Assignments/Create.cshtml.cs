@@ -59,6 +59,8 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
             Assignment.CourseID = Course.ID;
 
+            await AddAssignmentCreatedNotification(userID);
+
             _context.Assignment.Add(Assignment);
 
             await _context.SaveChangesAsync();
@@ -82,13 +84,13 @@ namespace LMS.Pages.Courses.CourseInfo.Assignments
 
             foreach (Registration registration in registrationRecords)
             {
-                    Notification notification = new Notification()
-                    {
-                        StudentID = registration.Student,
-                        AssignmentID = assignment.ID,
-                        Message = message,
-                    };
-                    _context.Notification.Add(notification);
+                Notification notification = new Notification()
+                {
+                    StudentID = registration.Student,
+                    AssignmentID = assignment.ID,
+                    Message = message,
+                };
+                _context.Notification.Add(notification);
             }
             await _context.SaveChangesAsync();
         }
