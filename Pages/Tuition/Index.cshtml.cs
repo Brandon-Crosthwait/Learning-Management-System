@@ -124,7 +124,6 @@ namespace LMS.Pages.Tuition
             {
                 //payment not valid
             }
-            User.Payment = User.Payment + Amount;
 
             //Make Charge
             var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.stripe.com/v1/charges");
